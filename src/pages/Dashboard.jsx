@@ -136,7 +136,7 @@ export default function Dashboard() {
         {[
           {  label: "Dashboard", path: "/dashboard", active: true },
           {  label: "DSA Practice", path: "/dsa" },
-          { label: "Aptitude", path: "/aptitude" },
+          {  label: "Aptitude", path: "/aptitude" },
           {  label: "Study Planner", path: "/planner" },
           {  label: "Community", path: "/community" },
         ].map((item) => (
@@ -216,10 +216,10 @@ export default function Dashboard() {
         {/* ROW 1 — STAT CARDS */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 16, marginBottom: 24 }}>
           {[
-            { label: "Readiness Score", value: `${readiness}%`,  sub: "+3% this week", color: COLORS.primary },
-            { label: "Problems Solved", value: "142",  sub: "8 this week", color: "#2563EB" },
-            { label: "Current Streak", value: "12 days",  sub: "Best: 18 days", color: "#EA580C" },
-            { label: "Aptitude Score", value: "74%",  sub: "+5% from last test", color: "#7C3AED" },
+            { label: "Readiness Score", value: `${readiness}%`, icon: "🎯", sub: "+3% this week", color: COLORS.primary },
+            { label: "Problems Solved", value: "142", icon: "✅", sub: "8 this week", color: "#2563EB" },
+            { label: "Current Streak", value: "12 days", icon: "🔥", sub: "Best: 18 days", color: "#EA580C" },
+            { label: "Aptitude Score", value: "74%", icon: "🧮", sub: "+5% from last test", color: "#7C3AED" },
           ].map((card) => (
             <div key={card.label} style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 16, padding: "20px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>

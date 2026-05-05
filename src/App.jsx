@@ -6,7 +6,7 @@ import Dashboard from './pages/Dashboard'
 import DSA from './pages/DSA'
 import Planner from './pages/Planner'
 import Community from './pages/Community'
-
+import Aptitude from './pages/Aptitude'
 function App() {
   return (
     <BrowserRouter>
@@ -18,6 +18,7 @@ function App() {
         <Route path="/dsa" element={<DSA />} />
         <Route path="/planner" element={<Planner />} />
         <Route path="/community" element={<Community />} />
+        <Route path="/aptitude" element={<Aptitude />} />
       </Routes>
     </BrowserRouter>
   )

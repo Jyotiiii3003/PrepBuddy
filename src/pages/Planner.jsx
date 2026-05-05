@@ -97,7 +97,7 @@ export default function Planner() {
         {[
           { label: "Dashboard", path: "/dashboard" },
           { label: "DSA", path: "/dsa" },
-          { label: "Planner", path: "/planner" },
+          
         ].map((item) => (
           <div
             key={item.label}
