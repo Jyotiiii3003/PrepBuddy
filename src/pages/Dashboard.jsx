@@ -134,11 +134,11 @@ export default function Dashboard() {
 
         {/* Nav Items */}
         {[
-          { icon: "🏠", label: "Dashboard", path: "/dashboard", active: true },
-          { icon: "💻", label: "DSA Practice", path: "/dsa" },
-          { icon: "🧮", label: "Aptitude", path: "/aptitude" },
-          { icon: "📅", label: "Study Planner", path: "/planner" },
-          { icon: "👥", label: "Community", path: "/community" },
+          {  label: "Dashboard", path: "/dashboard", active: true },
+          {  label: "DSA Practice", path: "/dsa" },
+          { label: "Aptitude", path: "/aptitude" },
+          {  label: "Study Planner", path: "/planner" },
+          {  label: "Community", path: "/community" },
         ].map((item) => (
           <div
             key={item.label}
@@ -171,7 +171,7 @@ export default function Dashboard() {
             onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.07)"}
             onMouseLeave={e => e.currentTarget.style.background = "transparent"}
           >
-            <span style={{ fontSize: 18 }}>🚪</span>
+            <span style={{ fontSize: 18 }}></span>
             {sidebarOpen && <span style={{ fontSize: 14, color: "#86EFAC" }}>Logout</span>}
           </div>
         </div>
@@ -184,7 +184,7 @@ export default function Dashboard() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28, flexWrap: "wrap", gap: 12 }}>
           <div>
             <h1 style={{ fontSize: 22, fontWeight: 800, color: COLORS.secondary, marginBottom: 4 }}>
-              {greeting}, Jyoti 👋
+              {greeting}, Jyoti 
             </h1>
             <p style={{ fontSize: 14, color: COLORS.textMuted }}>
               You have 2 tasks left for today. Keep going!
@@ -216,10 +216,10 @@ export default function Dashboard() {
         {/* ROW 1 — STAT CARDS */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 16, marginBottom: 24 }}>
           {[
-            { label: "Readiness Score", value: `${readiness}%`, icon: "🎯", sub: "+3% this week", color: COLORS.primary },
-            { label: "Problems Solved", value: "142", icon: "✅", sub: "8 this week", color: "#2563EB" },
-            { label: "Current Streak", value: "12 days", icon: "🔥", sub: "Best: 18 days", color: "#EA580C" },
-            { label: "Aptitude Score", value: "74%", icon: "🧮", sub: "+5% from last test", color: "#7C3AED" },
+            { label: "Readiness Score", value: `${readiness}%`,  sub: "+3% this week", color: COLORS.primary },
+            { label: "Problems Solved", value: "142",  sub: "8 this week", color: "#2563EB" },
+            { label: "Current Streak", value: "12 days",  sub: "Best: 18 days", color: "#EA580C" },
+            { label: "Aptitude Score", value: "74%",  sub: "+5% from last test", color: "#7C3AED" },
           ].map((card) => (
             <div key={card.label} style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 16, padding: "20px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>

@@ -136,11 +136,11 @@ export default function DSA() {
           <span style={{ fontSize: 16, fontWeight: 700, color: "#fff" }}>Prep<span style={{ color: COLORS.accent }}>Buddy</span></span>
         </div>
         {[
-          { icon: "🏠", label: "Dashboard", path: "/dashboard" },
-          { icon: "💻", label: "DSA Practice", path: "/dsa", active: true },
-          { icon: "🧮", label: "Aptitude", path: "/aptitude" },
-          { icon: "📅", label: "Study Planner", path: "/planner" },
-          { icon: "👥", label: "Community", path: "/community" },
+          {  label: "Dashboard", path: "/dashboard" },
+          {  label: "DSA Practice", path: "/dsa", active: true },
+          {  label: "Aptitude", path: "/aptitude" },
+          {  label: "Study Planner", path: "/planner" },
+          {  label: "Community", path: "/community" },
         ].map((item) => (
           <div key={item.label} onClick={() => navigate(item.path)}
             style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 20px", margin: "2px 8px", borderRadius: 10, cursor: "pointer", background: item.active ? "rgba(74,222,128,0.15)" : "transparent", borderLeft: item.active ? `3px solid ${COLORS.accent}` : "3px solid transparent" }}
