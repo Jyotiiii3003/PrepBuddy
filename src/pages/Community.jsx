@@ -11,23 +11,24 @@ const COLORS = {
   white: "#FFFFFF",
 };
 
-/* ---------------- MOCK DATA ---------------- */
+/* ---------------- DATA ---------------- */
 
 const ROOMS = [
-  { name: "DSA Grind Room", users: 6, topic: "Arrays" },
-  { name: "Aptitude Practice", users: 4, topic: "Quant" },
-  { name: "Placement Prep", users: 9, topic: "Mixed" },
+  { name: "DSA Grind", users: 12 },
+  { name: "Aptitude Zone", users: 7 },
+  { name: "Mock Battle", users: 5 },
 ];
 
-const FUN_ROOM = [
-  { user: "Aman", text: "What was your toughest DSA question today?" },
-  { user: "Priya", text: "Anyone else stuck on DP?" },
+const FEED = [
+  { user: "Aman", type: "question", text: "How to approach DP problems?" },
+  { user: "Priya", type: "activity", text: "Solved 5 problems today" },
+  { user: "Rahul", type: "question", text: "Best way to revise trees?" },
 ];
 
 const LEADERBOARD = [
-  { name: "Rahul", score: 92 },
-  { name: "Priya", score: 88 },
-  { name: "Aman", score: 85 },
+  { name: "Rahul", score: 98 },
+  { name: "Priya", score: 91 },
+  { name: "Aman", score: 87 },
   { name: "You", score: 80 },
 ];
 
@@ -36,17 +37,22 @@ const LEADERBOARD = [
 export default function Community() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [message, setMessage] = useState("");
-  const [funChat, setFunChat] = useState(FUN_ROOM);
+  const [feed, setFeed] = useState(FEED);
+  const [input, setInput] = useState("");
 
-  const sendMessage = () => {
-    if (!message.trim()) return;
-    setFunChat([{ user: "You", text: message }, ...funChat]);
-    setMessage("");
+  const post = () => {
+    if (!input.trim()) return;
+
+    setFeed([
+      { user: "You", type: "question", text: input },
+      ...feed,
+    ]);
+
+    setInput("");
   };
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: COLORS.bg }}>
+    <div style={{ display: "flex", height: "100vh", background: COLORS.bg }}>
 
       {/* SIDEBAR */}
       <aside style={{
@@ -62,7 +68,7 @@ export default function Community() {
 
         {[
           { label: "Dashboard", path: "/dashboard" },
-          { label: "DSA Practice", path: "/dsa" },
+          { label: "DSA", path: "/dsa" },
           { label: "Aptitude", path: "/aptitude" },
           { label: "Planner", path: "/planner" },
           { label: "Community", path: "/community" },
@@ -74,7 +80,6 @@ export default function Community() {
               padding: "10px 20px",
               cursor: "pointer",
               color: "#86EFAC",
-              fontWeight: item.label === "Community" ? 600 : 400
             }}
           >
             {sidebarOpen && item.label}
@@ -82,172 +87,132 @@ export default function Community() {
         ))}
       </aside>
 
-      {/* MAIN */}
-      <main style={{ flex: 1, padding: "32px" }}>
+      {/* MAIN GRID */}
+      <div style={{
+        flex: 1,
+        display: "grid",
+        gridTemplateColumns: "240px 1fr 280px",
+        gap: 16,
+        padding: 20
+      }}>
 
-        {/* HEADER */}
-        <div style={{ marginBottom: 24 }}>
-          <h1 style={{
-            fontSize: 32,
-            fontWeight: 800,
-            letterSpacing: "-0.02em",
-            marginBottom: 6
-          }}>
-            Community
-          </h1>
-          <p style={{ color: COLORS.textMuted, fontSize: 15 }}>
-            Collaborate, compete, and stay consistent
-          </p>
-        </div>
+        {/* LEFT → ROOMS */}
+        <div style={panel}>
+          <h3 style={title}>Rooms</h3>
 
-        {/* GRID */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1.3fr",
-          gap: 20
-        }}>
-
-          {/* STUDY ROOMS */}
-          <div style={card}>
-            <h3 style={title}>Study Rooms</h3>
-
-            {ROOMS.map((room, i) => (
-              <div
-                key={i}
-                style={roomCard}
-                onMouseEnter={e => e.currentTarget.style.background = "#ECFDF5"}
-                onMouseLeave={e => e.currentTarget.style.background = "#F9FAFB"}
-              >
-                <div>
-                  <div style={{ fontWeight: 600 }}>{room.name}</div>
-                  <small style={{ color: COLORS.textMuted }}>{room.topic}</small>
-                </div>
-
-                <span style={badge}>
-                  {room.users} active
-                </span>
+          {ROOMS.map((room, i) => (
+            <div key={i} style={roomCard}>
+              <div>
+                <div style={{ fontWeight: 600 }}>{room.name}</div>
+                <small>{room.users} active</small>
               </div>
-            ))}
 
-            <button style={btn}>Create Room</button>
-          </div>
-
-          {/* LEADERBOARD */}
-          <div style={card}>
-            <h3 style={title}>Leaderboard</h3>
-
-            {LEADERBOARD.map((user, i) => (
-              <div key={i} style={{
-                display: "flex",
-                justifyContent: "space-between",
-                padding: "10px 12px",
-                borderRadius: 10,
-                background: i === 0 ? "#ECFDF5" : "transparent",
-                fontWeight: i === 0 ? 700 : 500
-              }}>
-                <span>{i + 1}. {user.name}</span>
-                <span>{user.score}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* FUN ROOM */}
-          <div style={card}>
-            <h3 style={title}>Fun Room</h3>
-
-            {/* INPUT */}
-            <div style={{ marginBottom: 12 }}>
-              <input
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Share something..."
-                style={input}
-              />
-              <button onClick={sendMessage} style={btn}>
-                Send
-              </button>
+              <button style={joinBtn}>Join</button>
             </div>
+          ))}
+        </div>
 
-            {/* CHAT */}
-            {funChat.map((msg, i) => (
-              <div
-                key={i}
-                style={post}
-                onMouseEnter={e => e.currentTarget.style.background = "#ECFDF5"}
-                onMouseLeave={e => e.currentTarget.style.background = "#F9FAFB"}
-              >
-                <strong>{msg.user}</strong>
-                <p style={{ margin: "4px 0 0" }}>{msg.text}</p>
+        {/* CENTER → LIVE FEED */}
+        <div style={panel}>
+          <h3 style={title}>Live Feed</h3>
+
+          {/* INPUT */}
+          <div style={{ marginBottom: 12 }}>
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Ask a question..."
+              style={inputStyle}
+            />
+            <button onClick={post} style={btn}>Post</button>
+          </div>
+
+          {/* FEED */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {feed.map((item, i) => (
+              <div key={i} style={{
+                padding: 12,
+                borderRadius: 12,
+                background: item.type === "question" ? "#FEF9C3" : "#DCFCE7"
+              }}>
+                <strong>{item.user}</strong>
+                <p style={{ margin: "4px 0 0" }}>{item.text}</p>
               </div>
             ))}
           </div>
-
         </div>
-      </main>
+
+        {/* RIGHT → LEADERBOARD */}
+        <div style={panel}>
+          <h3 style={title}>Leaderboard</h3>
+
+          {LEADERBOARD.map((user, i) => (
+            <div key={i} style={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: "10px 12px",
+              borderRadius: 10,
+              background: i === 0 ? "#ECFDF5" : "transparent",
+              fontWeight: i === 0 ? 700 : 500
+            }}>
+              <span>{i + 1}. {user.name}</span>
+              <span>{user.score}</span>
+            </div>
+          ))}
+        </div>
+
+      </div>
     </div>
   );
 }
 
 /* ---------------- STYLES ---------------- */
 
-const card = {
-  background: "rgba(255,255,255,0.9)",
-  backdropFilter: "blur(10px)",
-  border: "1px solid rgba(187,247,208,0.6)",
-  borderRadius: 20,
-  padding: 24,
-  boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
+const panel = {
+  background: "#fff",
+  borderRadius: 16,
+  padding: 16,
+  border: "1px solid #BBF7D0",
+  overflowY: "auto",
 };
 
 const title = {
-  marginBottom: 16,
-  fontSize: 18,
+  marginBottom: 12,
   fontWeight: 700,
 };
 
 const roomCard = {
-  padding: "12px 14px",
-  borderRadius: 12,
-  background: "#F9FAFB",
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
+  padding: 10,
+  borderRadius: 10,
+  background: "#F9FAFB",
   marginBottom: 10,
-  transition: "0.2s",
 };
 
-const badge = {
-  fontSize: 12,
-  background: "#DCFCE7",
-  padding: "4px 10px",
-  borderRadius: 20,
+const joinBtn = {
+  padding: "6px 10px",
+  background: "#16A34A",
+  color: "#fff",
+  border: "none",
+  borderRadius: 8,
+  cursor: "pointer",
 };
 
 const btn = {
-  marginTop: 12,
-  padding: "10px 16px",
-  background: "linear-gradient(135deg, #16A34A, #22C55E)",
+  marginTop: 8,
+  padding: "8px 12px",
+  background: "#16A34A",
   color: "#fff",
   border: "none",
-  borderRadius: 12,
-  fontWeight: 600,
+  borderRadius: 10,
   cursor: "pointer",
-  boxShadow: "0 6px 18px rgba(22,163,74,0.25)",
 };
 
-const input = {
+const inputStyle = {
   width: "100%",
-  padding: 12,
-  borderRadius: 12,
+  padding: 10,
+  borderRadius: 10,
   border: "1px solid #BBF7D0",
-  marginBottom: 10,
-  outline: "none",
-};
-
-const post = {
-  background: "#F9FAFB",
-  borderRadius: 12,
-  padding: 12,
-  marginTop: 10,
-  transition: "0.2s",
 };
