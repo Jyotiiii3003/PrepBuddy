@@ -1,27 +1,53 @@
 @import "tailwindcss";
-body {
-  font-family: 'Inter', sans-serif;
+
+/* ============================================
+   PREPBUDDY — GLOBAL DESIGN SYSTEM
+   ============================================ */
+
+:root {
+  --font-display: 'Clash Display', 'Sora', sans-serif;
+  --font-body: 'Sora', 'Segoe UI', sans-serif;
+  --font-ui: 'Nunito', 'Sora', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  --color-primary: #16A34A;
+  --color-secondary: #14532D;
+  --color-accent: #4ADE80;
+  --color-bg: #F0FDF4;
+  --color-bg-card: #DCFCE7;
+  --color-text: #052E16;
+  --color-text-muted: #166534;
+  --color-border: #BBF7D0;
+  --color-border-dark: #86EFAC;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
   font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-text);
+  background: var(--color-bg);
   line-height: 1.6;
 }
 
-/* Headings */
-h1 {
-  font-size: 32px;
-  font-weight: 800;
+input, textarea, select, button {
+  font-family: var(--font-ui);
 }
 
-h2 {
-  font-size: 24px;
-  font-weight: 700;
-}
-
-h3 {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-/* Paragraph */
-p {
-  font-size: 16px;
-}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #86EFAC; border-radius: 100px; }
+::-webkit-scrollbar-thumb:hover { background: #16A34A; }
+::selection { background: #BBF7D0; color: #052E16; }

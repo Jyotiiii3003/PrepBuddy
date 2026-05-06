@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { askGemini } from "../utils/gemini";
-
+import { F } from "../utils/theme";
 const COLORS = {
   primary: "#16A34A",
   secondary: "#14532D",
@@ -127,12 +127,12 @@ export default function DSA() {
   const attempted = PROBLEMS.filter(p => p.status === "attempted").length;
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: COLORS.bg, fontFamily: "'DM Sans','Segoe UI',sans-serif" }}>
+    <div style={{ display: "flex", minHeight: "100vh", background: COLORS.bg, fontFamily: F.body }}>
 
       {/* SIDEBAR */}
       <aside style={{ width: 220, background: COLORS.secondary, display: "flex", flexDirection: "column", padding: "20px 0", flexShrink: 0, position: "sticky", top: 0, height: "100vh" }}>
         <div onClick={() => navigate("/")} style={{ padding: "0 16px 24px", display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
-          <div style={{ width: 28, height: 28, background: COLORS.accent, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>⚡</div>
+          <div style={{ width: 28, height: 28, background: COLORS.accent, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>⚡</div>
           <span style={{ fontSize: 16, fontWeight: 700, color: "#fff" }}>Prep<span style={{ color: COLORS.accent }}>Buddy</span></span>
         </div>
         {[
@@ -143,12 +143,12 @@ export default function DSA() {
           {  label: "Community", path: "/community" },
         ].map((item) => (
           <div key={item.label} onClick={() => navigate(item.path)}
-            style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 20px", margin: "2px 8px", borderRadius: 10, cursor: "pointer", background: item.active ? "rgba(74,222,128,0.15)" : "transparent", borderLeft: item.active ? `3px solid ${COLORS.accent}` : "3px solid transparent" }}
+            style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 20px", margin: "2px 8px", borderRadius: 10, fontFamily: F.ui, cursor: "pointer", background: item.active ? "rgba(74,222,128,0.15)" : "transparent", borderLeft: item.active ? `3px solid ${COLORS.accent}` : "3px solid transparent" }}
             onMouseEnter={e => !item.active && (e.currentTarget.style.background = "rgba(255,255,255,0.07)")}
             onMouseLeave={e => !item.active && (e.currentTarget.style.background = "transparent")}
           >
             <span style={{ fontSize: 18 }}>{item.icon}</span>
-            <span style={{ fontSize: 14, fontWeight: item.active ? 600 : 400, color: item.active ? COLORS.accent : "#86EFAC" }}>{item.label}</span>
+            <span style={{ fontSize: 16, fontWeight: item.active ? 600 : 400, color: item.active ? COLORS.accent : "#86EFAC" }}>{item.label}</span>
           </div>
         ))}
       </aside>
@@ -159,8 +159,8 @@ export default function DSA() {
 
           {/* Header */}
           <div style={{ marginBottom: 24 }}>
-            <h1 style={{ fontSize: 24, fontWeight: 800, color: COLORS.secondary, marginBottom: 6 }}>DSA Practice</h1>
-            <p style={{ fontSize: 14, color: COLORS.textMuted }}>
+            <h1 style={{ fontSize: 32, fontWeight: 800, fontFamily: F.display, color: COLORS.secondary, marginBottom: 6 }}>DSA Practice</h1>
+            <p style={{ fontSize: 16, color: COLORS.textMuted }}>
               {solved} solved · {attempted} attempted · {PROBLEMS.length - solved - attempted} unsolved
             </p>
           </div>
@@ -168,8 +168,8 @@ export default function DSA() {
           {/* Progress Bar */}
           <div style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 16, padding: "18px 24px", marginBottom: 24 }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-              <span style={{ fontSize: 13, fontWeight: 600, color: COLORS.secondary }}>Overall Progress</span>
-              <span style={{ fontSize: 13, color: COLORS.textMuted }}>{solved}/{PROBLEMS.length} solved</span>
+              <span style={{ fontSize: 14, fontWeight: 600, color: COLORS.secondary }}>Overall Progress</span>
+              <span style={{ fontSize: 14, color: COLORS.textMuted }}>{solved}/{PROBLEMS.length} solved</span>
             </div>
             <div style={{ height: 10, background: COLORS.bgCard, borderRadius: 100, overflow: "hidden" }}>
               <div style={{ height: "100%", width: `${(solved / PROBLEMS.length) * 100}%`, background: `linear-gradient(90deg, ${COLORS.primary}, ${COLORS.accent})`, borderRadius: 100, transition: "width 0.5s ease" }} />
@@ -180,7 +180,7 @@ export default function DSA() {
                 { label: "Medium", count: PROBLEMS.filter(p => p.difficulty === "Medium" && p.status === "solved").length, total: PROBLEMS.filter(p => p.difficulty === "Medium").length, color: "#854D0E" },
                 { label: "Hard", count: PROBLEMS.filter(p => p.difficulty === "Hard" && p.status === "solved").length, total: PROBLEMS.filter(p => p.difficulty === "Hard").length, color: "#991B1B" },
               ].map(d => (
-                <span key={d.label} style={{ fontSize: 12, color: d.color, fontWeight: 600 }}>{d.label}: {d.count}/{d.total}</span>
+                <span key={d.label} style={{ fontSize: 14, color: d.color, fontWeight: 600 }}>{d.label}: {d.count}/{d.total}</span>
               ))}
             </div>
           </div>
@@ -191,16 +191,16 @@ export default function DSA() {
               placeholder="Search problems..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              style={{ flex: 1, minWidth: 200, padding: "10px 16px", borderRadius: 10, border: `1.5px solid ${COLORS.border}`, background: COLORS.white, fontSize: 14, color: COLORS.text, outline: "none" }}
+              style={{ flex: 1, minWidth: 200, padding: "10px 16px", borderRadius: 10, border: `1.5px solid ${COLORS.border}`, background: COLORS.white, fontSize: 16, color: COLORS.text, outline: "none" }}
               onFocus={e => e.target.style.borderColor = COLORS.primary}
               onBlur={e => e.target.style.borderColor = COLORS.border}
             />
             <select value={selectedDiff} onChange={e => setSelectedDiff(e.target.value)}
-              style={{ padding: "10px 14px", borderRadius: 10, border: `1.5px solid ${COLORS.border}`, background: COLORS.white, fontSize: 14, color: COLORS.text, outline: "none", cursor: "pointer" }}>
+              style={{ padding: "10px 14px", borderRadius: 10, border: `1.5px solid ${COLORS.border}`, background: COLORS.white, fontSize: 16, color: COLORS.text, outline: "none", fontFamily: F.ui, cursor: "pointer" }}>
               {DIFFICULTIES.map(d => <option key={d}>{d}</option>)}
             </select>
             <select value={selectedStatus} onChange={e => setSelectedStatus(e.target.value)}
-              style={{ padding: "10px 14px", borderRadius: 10, border: `1.5px solid ${COLORS.border}`, background: COLORS.white, fontSize: 14, color: COLORS.text, outline: "none", cursor: "pointer" }}>
+              style={{ padding: "10px 14px", borderRadius: 10, border: `1.5px solid ${COLORS.border}`, background: COLORS.white, fontSize: 16, color: COLORS.text, outline: "none", cursor: "pointer" }}>
               {STATUSES.map(s => <option key={s}>{s}</option>)}
             </select>
           </div>
@@ -209,7 +209,7 @@ export default function DSA() {
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 20 }}>
             {TOPICS.map(t => (
               <button key={t} onClick={() => setSelectedTopic(t)}
-                style={{ padding: "6px 16px", borderRadius: 100, border: `1.5px solid ${selectedTopic === t ? COLORS.primary : COLORS.border}`, background: selectedTopic === t ? COLORS.primary : COLORS.white, color: selectedTopic === t ? "#fff" : COLORS.textMuted, fontSize: 13, fontWeight: 500, cursor: "pointer", transition: "all 0.2s" }}>
+                style={{ padding: "6px 16px", borderRadius: 100, border: `1.5px solid ${selectedTopic === t ? COLORS.primary : COLORS.border}`, background: selectedTopic === t ? COLORS.primary : COLORS.white, color: selectedTopic === t ? "#fff" : COLORS.textMuted, fontSize: 14, fontWeight: 500, fontFamily: F.ui, cursor: "pointer", transition: "all 0.2s" }}>
                 {t}
               </button>
             ))}
@@ -219,7 +219,7 @@ export default function DSA() {
           <div style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 20, overflow: "hidden" }}>
             <div style={{ display: "grid", gridTemplateColumns: "40px 1fr 120px 100px 80px 120px", padding: "12px 20px", background: COLORS.bgCard, borderBottom: `1px solid ${COLORS.border}` }}>
               {["#", "Title", "Topic", "Difficulty", "Status", "Companies"].map(h => (
-                <span key={h} style={{ fontSize: 12, fontWeight: 700, color: COLORS.textMuted, textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</span>
+                <span key={h} style={{ fontSize: 14, fontWeight: 700, color: COLORS.textMuted, textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</span>
               ))}
             </div>
             {filtered.length === 0 ? (
@@ -230,14 +230,14 @@ export default function DSA() {
               filtered.map((p, i) => (
                 <div key={p.id}
                   onClick={() => openProblem(p)}
-                  style={{ display: "grid", gridTemplateColumns: "40px 1fr 120px 100px 80px 120px", padding: "14px 20px", borderBottom: i < filtered.length - 1 ? `1px solid ${COLORS.border}` : "none", cursor: "pointer", transition: "background 0.15s", alignItems: "center" }}
+                  style={{ display: "grid", gridTemplateColumns: "40px 1fr 120px 100px 80px 120px", padding: "14px 20px", borderBottom: i < filtered.length - 1 ? `1px solid ${COLORS.border}` : "none", fontFamily: F.ui, cursor: "pointer", transition: "background 0.15s", alignItems: "center" }}
                   onMouseEnter={e => e.currentTarget.style.background = COLORS.bg}
                   onMouseLeave={e => e.currentTarget.style.background = "transparent"}
                 >
-                  <span style={{ fontSize: 13, color: COLORS.textMuted }}>{p.id}</span>
-                  <span style={{ fontSize: 14, fontWeight: 600, color: COLORS.secondary }}>{p.title}</span>
-                  <span style={{ fontSize: 12, color: COLORS.textMuted }}>{p.topic}</span>
-                  <span style={{ fontSize: 12, fontWeight: 600, padding: "2px 10px", borderRadius: 20, background: DIFF_STYLE[p.difficulty].bg, color: DIFF_STYLE[p.difficulty].color, display: "inline-block", width: "fit-content" }}>{p.difficulty}</span>
+                  <span style={{ fontSize: 14, color: COLORS.textMuted }}>{p.id}</span>
+                  <span style={{ fontSize: 16, fontWeight: 600, color: COLORS.secondary }}>{p.title}</span>
+                  <span style={{ fontSize: 14, color: COLORS.textMuted }}>{p.topic}</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, padding: "2px 10px", borderRadius: 20, background: DIFF_STYLE[p.difficulty].bg, color: DIFF_STYLE[p.difficulty].color, display: "inline-block", width: "fit-content" }}>{p.difficulty}</span>
                   <span style={{ fontSize: 16 }}>{STATUS_ICON[p.status]}</span>
                   <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
                     {p.companies.slice(0, 2).map(c => (
@@ -258,7 +258,7 @@ export default function DSA() {
           {/* Left: Problem info */}
           <div style={{ width: "42%", borderRight: `1px solid ${COLORS.border}`, overflowY: "auto", padding: "24px" }}>
             <button onClick={() => setSelectedProblem(null)}
-              style={{ background: COLORS.bgCard, border: "none", color: COLORS.secondary, padding: "7px 14px", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer", marginBottom: 20 }}>
+              style={{ background: COLORS.bgCard, border: "none", color: COLORS.secondary, padding: "7px 14px", borderRadius: 8, fontSize: 14, fontWeight: 600, fontFamily: F.ui, cursor: "pointer", marginBottom: 20 }}>
               ← Back to list
             </button>
 
@@ -266,7 +266,7 @@ export default function DSA() {
             <div style={{ display: "flex", gap: 4, marginBottom: 20, background: COLORS.bg, borderRadius: 10, padding: 4 }}>
               {["problem", "hints", "solution"].map(tab => (
                 <button key={tab} onClick={() => setActiveTab(tab)}
-                  style={{ flex: 1, padding: "8px", borderRadius: 8, border: "none", background: activeTab === tab ? COLORS.white : "transparent", color: activeTab === tab ? COLORS.secondary : COLORS.textMuted, fontSize: 13, fontWeight: activeTab === tab ? 600 : 400, cursor: "pointer", boxShadow: activeTab === tab ? "0 1px 4px rgba(0,0,0,0.08)" : "none", textTransform: "capitalize" }}>
+                  style={{ flex: 1, padding: "8px", borderRadius: 8, border: "none", background: activeTab === tab ? COLORS.white : "transparent", color: activeTab === tab ? COLORS.secondary : COLORS.textMuted, fontSize: 14, fontWeight: activeTab === tab ? 600 : 400, cursor: "pointer", boxShadow: activeTab === tab ? "0 1px 4px rgba(0,0,0,0.08)" : "none", textTransform: "capitalize" }}>
                   {tab}
                 </button>
               ))}
@@ -278,15 +278,15 @@ export default function DSA() {
                   <h2 style={{ fontSize: 18, fontWeight: 800, color: COLORS.secondary, margin: 0 }}>{selectedProblem.title}</h2>
                 </div>
                 <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
-                  <span style={{ fontSize: 12, fontWeight: 600, padding: "3px 12px", borderRadius: 20, background: DIFF_STYLE[selectedProblem.difficulty].bg, color: DIFF_STYLE[selectedProblem.difficulty].color }}>{selectedProblem.difficulty}</span>
-                  <span style={{ fontSize: 12, background: COLORS.bgCard, color: COLORS.textMuted, padding: "3px 12px", borderRadius: 20 }}>{selectedProblem.topic}</span>
-                  <span style={{ fontSize: 12, background: COLORS.bgCard, color: COLORS.textMuted, padding: "3px 12px", borderRadius: 20 }}>Acceptance: {selectedProblem.acceptance}</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, padding: "3px 12px", borderRadius: 20, background: DIFF_STYLE[selectedProblem.difficulty].bg, color: DIFF_STYLE[selectedProblem.difficulty].color }}>{selectedProblem.difficulty}</span>
+                  <span style={{ fontSize: 14, background: COLORS.bgCard, color: COLORS.textMuted, padding: "3px 12px", borderRadius: 20 }}>{selectedProblem.topic}</span>
+                  <span style={{ fontSize: 14, background: COLORS.bgCard, color: COLORS.textMuted, padding: "3px 12px", borderRadius: 20 }}>Acceptance: {selectedProblem.acceptance}</span>
                 </div>
 
-                <div style={{ fontSize: 14, color: COLORS.text, lineHeight: 1.8, marginBottom: 20 }}>
+                <div style={{ fontSize: 16, color: COLORS.text, lineHeight: 1.8, marginBottom: 20 }}>
                   <p>Given the problem <strong>{selectedProblem.title}</strong>, implement an efficient solution.</p>
                   <p><strong>Example:</strong></p>
-                  <div style={{ background: COLORS.bgCard, border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: "12px 16px", fontFamily: "monospace", fontSize: 13, color: COLORS.secondary }}>
+                  <div style={{ background: COLORS.bgCard, border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: "12px 16px", fontFamily: "monospace", fontSize: 14, color: COLORS.secondary }}>
                     Input: nums = [2, 7, 11, 15], target = 9<br />
                     Output: [0, 1]<br />
                     Explanation: nums[0] + nums[1] = 9
@@ -301,7 +301,7 @@ export default function DSA() {
 
                 <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                   {selectedProblem.companies.map(c => (
-                    <span key={c} style={{ fontSize: 12, background: "#EFF6FF", color: "#1D4ED8", padding: "4px 12px", borderRadius: 20, fontWeight: 500 }}>🏢 {c}</span>
+                    <span key={c} style={{ fontSize: 14, background: "#EFF6FF", color: "#1D4ED8", padding: "4px 12px", borderRadius: 20, fontWeight: 500 }}>🏢 {c}</span>
                   ))}
                 </div>
               </>
@@ -309,14 +309,14 @@ export default function DSA() {
 
             {activeTab === "hints" && (
               <div>
-                <p style={{ fontSize: 14, color: COLORS.textMuted, marginBottom: 20 }}>
+                <p style={{ fontSize: 16, color: COLORS.textMuted, marginBottom: 20 }}>
                   Describe what you are stuck on and our AI tutor will give you a Socratic hint — a guiding question to help you think, not just the answer.
                 </p>
                 <textarea
                   value={confusion}
                   onChange={e => setConfusion(e.target.value)}
                   placeholder="e.g. I don't know how to handle duplicate elements, or I'm confused about the time complexity..."
-                  style={{ width: "100%", height: 100, padding: "12px", borderRadius: 12, border: `1.5px solid ${COLORS.border}`, fontSize: 14, color: COLORS.text, resize: "vertical", outline: "none", boxSizing: "border-box", fontFamily: "inherit" }}
+                  style={{ width: "100%", height: 100, padding: "12px", borderRadius: 12, border: `1.5px solid ${COLORS.border}`, fontSize: 16, color: COLORS.text, resize: "vertical", outline: "none", boxSizing: "border-box", fontFamily: "inherit" }}
                   onFocus={e => e.target.style.borderColor = COLORS.primary}
                   onBlur={e => e.target.style.borderColor = COLORS.border}
                 />
@@ -326,8 +326,8 @@ export default function DSA() {
                 </button>
                 {hint && (
                   <div style={{ marginTop: 16, background: COLORS.bgCard, border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: "16px" }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: COLORS.primary, marginBottom: 8 }}>💡 AI HINT</div>
-                    <p style={{ fontSize: 14, color: COLORS.text, lineHeight: 1.7, margin: 0 }}>{hint}</p>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: COLORS.primary, marginBottom: 8 }}>💡 AI HINT</div>
+                    <p style={{ fontSize: 16, color: COLORS.text, lineHeight: 1.7, margin: 0 }}>{hint}</p>
                   </div>
                 )}
               </div>
@@ -335,12 +335,12 @@ export default function DSA() {
 
             {activeTab === "solution" && (
               <div style={{ background: COLORS.bgCard, border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: "16px" }}>
-                <p style={{ fontSize: 14, color: COLORS.textMuted }}>
+                <p style={{ fontSize: 16, color: COLORS.textMuted }}>
                   Try solving the problem first! Once you have attempted it, the solution will be available here. Use the AI hints tab if you are stuck.
                 </p>
                 <button
                   onClick={() => setActiveTab("hints")}
-                  style={{ marginTop: 12, background: COLORS.primary, border: "none", color: "#fff", padding: "10px 20px", borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
+                  style={{ marginTop: 12, background: COLORS.primary, border: "none", color: "#fff", padding: "10px 20px", borderRadius: 10, fontSize: 16, fontWeight: 600, fontFamily: F.ui, cursor: "pointer" }}>
                   Get a Hint Instead →
                 </button>
               </div>
@@ -352,8 +352,8 @@ export default function DSA() {
             {/* Editor toolbar */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 20px", borderBottom: "1px solid #2D2D2D" }}>
               <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                <span style={{ fontSize: 13, color: "#A0AEC0" }}>Language:</span>
-                <select style={{ background: "#2D2D2D", color: "#E2E8F0", border: "1px solid #3D3D3D", padding: "4px 10px", borderRadius: 6, fontSize: 13, cursor: "pointer" }}>
+                <span style={{ fontSize: 14, color: "#A0AEC0" }}>Language:</span>
+                <select style={{ background: "#2D2D2D", color: "#E2E8F0", border: "1px solid #3D3D3D", padding: "4px 10px", borderRadius: 6, fontSize: 14, cursor: "pointer" }}>
                   <option>Python</option>
                   <option>JavaScript</option>
                   <option>Java</option>
@@ -363,15 +363,15 @@ export default function DSA() {
               <div style={{ display: "flex", gap: 8 }}>
                 <button
                   onClick={() => setCode(STARTER_CODE[selectedProblem.topic] || STARTER_CODE.default)}
-                  style={{ background: "#2D2D2D", border: "1px solid #3D3D3D", color: "#A0AEC0", padding: "6px 14px", borderRadius: 8, fontSize: 13, cursor: "pointer" }}>
+                  style={{ background: "#2D2D2D", border: "1px solid #3D3D3D", color: "#A0AEC0", padding: "6px 14px", borderRadius: 8, fontSize: 14, cursor: "pointer" }}>
                   Reset
                 </button>
                 <button
-                  style={{ background: COLORS.primary, border: "none", color: "#fff", padding: "6px 20px", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+                  style={{ background: COLORS.primary, border: "none", color: "#fff", padding: "6px 20px", borderRadius: 8, fontSize: 14, fontWeight: 700, fontFamily: F.ui, cursor: "pointer" }}>
                   ▶ Run
                 </button>
                 <button
-                  style={{ background: "#16A34A22", border: `1px solid ${COLORS.primary}`, color: COLORS.accent, padding: "6px 20px", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+                  style={{ background: "#16A34A22", border: `1px solid ${COLORS.primary}`, color: COLORS.accent, padding: "6px 20px", borderRadius: 8, fontSize: 14, fontWeight: 700, fontFamily: F.ui, cursor: "pointer" }}>
                   Submit
                 </button>
               </div>
@@ -382,13 +382,13 @@ export default function DSA() {
               value={code}
               onChange={e => setCode(e.target.value)}
               spellCheck={false}
-              style={{ flex: 1, background: "#1E1E1E", color: "#D4D4D4", border: "none", padding: "20px 24px", fontSize: 14, fontFamily: "'Fira Code', 'Courier New', monospace", lineHeight: 1.8, resize: "none", outline: "none" }}
+              style={{ flex: 1, background: "#1E1E1E", color: "#D4D4D4", border: "none", padding: "20px 24px", fontSize: 16, fontFamily: "'Fira Code', 'Courier New', monospace", lineHeight: 1.8, resize: "none", outline: "none" }}
             />
 
             {/* Output panel */}
             <div style={{ height: 120, borderTop: "1px solid #2D2D2D", padding: "12px 20px" }}>
-              <div style={{ fontSize: 12, fontWeight: 600, color: "#A0AEC0", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Output</div>
-              <div style={{ fontSize: 13, color: "#4ADE80", fontFamily: "monospace" }}>
+              <div style={{ fontSize: 14, fontWeight: 600, color: "#A0AEC0", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>Output</div>
+              <div style={{ fontSize: 14, color: "#4ADE80", fontFamily: "monospace" }}>
                 Click Run to execute your code...
               </div>
             </div>

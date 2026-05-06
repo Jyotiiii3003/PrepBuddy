@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { F } from "../utils/theme";
 const COLORS = {
   primary: "#16A34A",
   secondary: "#14532D",
@@ -93,22 +93,22 @@ export default function Aptitude() {
   ];
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: COLORS.bg, fontFamily: "'DM Sans','Segoe UI',sans-serif" }}>
+    <div style={{ display: "flex", minHeight: "100vh", background: COLORS.bg, fontFamily: F.body }}>
 
       {/* SIDEBAR */}
       <aside style={{ width: 220, background: COLORS.secondary, display: "flex", flexDirection: "column", padding: "20px 0", flexShrink: 0, position: "sticky", top: 0, height: "100vh" }}>
         <div onClick={() => navigate("/")} style={{ padding: "0 16px 24px", display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
-          <div style={{ width: 28, height: 28, background: COLORS.accent, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>⚡</div>
+          <div style={{ width: 28, height: 28, background: COLORS.accent, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>⚡</div>
           <span style={{ fontSize: 16, fontWeight: 700, color: "#fff" }}>Prep<span style={{ color: COLORS.accent }}>Buddy</span></span>
         </div>
         {NAV.map(item => (
           <div key={item.label} onClick={() => navigate(item.path)}
-            style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 20px", margin: "2px 8px", borderRadius: 10, cursor: "pointer", background: item.active ? "rgba(74,222,128,0.15)" : "transparent", borderLeft: item.active ? `3px solid ${COLORS.accent}` : "3px solid transparent" }}
+            style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 20px", margin: "2px 8px", borderRadius: 10, fontFamily: F.ui, cursor: "pointer", background: item.active ? "rgba(74,222,128,0.15)" : "transparent", borderLeft: item.active ? `3px solid ${COLORS.accent}` : "3px solid transparent" }}
             onMouseEnter={e => !item.active && (e.currentTarget.style.background = "rgba(255,255,255,0.07)")}
             onMouseLeave={e => !item.active && (e.currentTarget.style.background = "transparent")}
           >
             <span style={{ fontSize: 18 }}>{item.icon}</span>
-            <span style={{ fontSize: 14, fontWeight: item.active ? 600 : 400, color: item.active ? COLORS.accent : "#86EFAC" }}>{item.label}</span>
+            <span style={{ fontSize: 16, fontWeight: item.active ? 600 : 400, color: item.active ? COLORS.accent : "#86EFAC" }}>{item.label}</span>
           </div>
         ))}
       </aside>
@@ -121,12 +121,12 @@ export default function Aptitude() {
           <>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 28, flexWrap: "wrap", gap: 12 }}>
               <div>
-                <h1 style={{ fontSize: 24, fontWeight: 800, color: COLORS.secondary, marginBottom: 4 }}>Aptitude Practice 🧮</h1>
-                <p style={{ fontSize: 14, color: COLORS.textMuted }}>Master Quant, Logical and Verbal for placements</p>
+                <h1 style={{ fontSize: 32, fontWeight: 800, fontFamily: F.display, color: COLORS.secondary, marginBottom: 4 }}>Aptitude Practice 🧮</h1>
+                <p style={{ fontSize: 16, color: COLORS.textMuted }}>Master Quant, Logical and Verbal for placements</p>
               </div>
               <button
                 onClick={() => startQuiz(filtered.slice(0, 5))}
-                style={{ background: COLORS.primary, border: "none", color: "#fff", padding: "11px 24px", borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: "pointer", boxShadow: `0 4px 14px ${COLORS.primary}44` }}>
+                style={{ background: COLORS.primary, border: "none", color: "#fff", padding: "11px 24px", borderRadius: 12, fontSize: 16, fontWeight: 700, fontFamily: F.ui, cursor: "pointer", boxShadow: `0 4px 14px ${COLORS.primary}44` }}>
                 ▶ Start Mock Test
               </button>
             </div>
@@ -141,10 +141,10 @@ export default function Aptitude() {
               ].map(s => (
                 <div key={s.label} style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 14, padding: "16px 20px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-                    <span style={{ fontSize: 12, color: COLORS.textMuted, fontWeight: 500 }}>{s.label}</span>
+                    <span style={{ fontSize: 14, color: COLORS.textMuted, fontWeight: 500 }}>{s.label}</span>
                     <span style={{ fontSize: 18 }}>{s.icon}</span>
                   </div>
-                  <div style={{ fontSize: 28, fontWeight: 800, color: s.color }}>{s.value}</div>
+                  <div style={{ fontSize: 36, fontWeight: 800, fontFamily: F.display, color: s.color }}>{s.value}</div>
                 </div>
               ))}
             </div>
@@ -156,11 +156,11 @@ export default function Aptitude() {
                   onClick={() => { setSelectedTopic(topic); startQuiz(QUESTIONS.filter(q => q.topic === topic)); }}
                   onMouseEnter={e => { e.currentTarget.style.borderColor = COLORS.borderDark; e.currentTarget.style.transform = "translateY(-3px)"; }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = COLORS.border; e.currentTarget.style.transform = "translateY(0)"; }}
-                  style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 16, padding: "20px", cursor: "pointer", transition: "all 0.2s" }}>
+                  style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 16, padding: "20px", fontFamily: F.ui, cursor: "pointer", transition: "all 0.2s" }}>
                   <div style={{ fontSize: 28, marginBottom: 10 }}>{TOPIC_ICONS[topic]}</div>
                   <div style={{ fontSize: 15, fontWeight: 700, color: COLORS.secondary, marginBottom: 4 }}>{topic}</div>
-                  <div style={{ fontSize: 13, color: COLORS.textMuted }}>{QUESTIONS.filter(q => q.topic === topic).length} questions</div>
-                  <div style={{ marginTop: 14, fontSize: 12, color: COLORS.primary, fontWeight: 600 }}>Practice now →</div>
+                  <div style={{ fontSize: 14, color: COLORS.textMuted }}>{QUESTIONS.filter(q => q.topic === topic).length} questions</div>
+                  <div style={{ marginTop: 14, fontSize: 14, color: COLORS.primary, fontWeight: 600 }}>Practice now →</div>
                 </div>
               ))}
             </div>
@@ -168,11 +168,11 @@ export default function Aptitude() {
             {/* Filters + Question List */}
             <div style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 20, overflow: "hidden" }}>
               <div style={{ padding: "16px 20px", background: COLORS.bgCard, borderBottom: `1px solid ${COLORS.border}`, display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-                <span style={{ fontSize: 14, fontWeight: 700, color: COLORS.secondary }}>All Questions</span>
+                <span style={{ fontSize: 16, fontWeight: 700, color: COLORS.secondary }}>All Questions</span>
                 <div style={{ display: "flex", gap: 8, marginLeft: "auto" }}>
                   {TOPICS.map(t => (
                     <button key={t} onClick={() => setSelectedTopic(t)}
-                      style={{ padding: "5px 14px", borderRadius: 100, border: `1.5px solid ${selectedTopic === t ? COLORS.primary : COLORS.border}`, background: selectedTopic === t ? COLORS.primary : COLORS.white, color: selectedTopic === t ? "#fff" : COLORS.textMuted, fontSize: 12, fontWeight: 500, cursor: "pointer" }}>
+                      style={{ padding: "5px 14px", borderRadius: 100, border: `1.5px solid ${selectedTopic === t ? COLORS.primary : COLORS.border}`, background: selectedTopic === t ? COLORS.primary : COLORS.white, color: selectedTopic === t ? "#fff" : COLORS.textMuted, fontSize: 14, fontWeight: 500, fontFamily: F.ui, cursor: "pointer" }}>
                       {t}
                     </button>
                   ))}
@@ -188,8 +188,8 @@ export default function Aptitude() {
                 >
                   <span style={{ fontSize: 18 }}>{TOPIC_ICONS[q.topic]}</span>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: COLORS.secondary, marginBottom: 2 }}>{q.question.length > 70 ? q.question.slice(0, 70) + "..." : q.question}</div>
-                    <div style={{ fontSize: 12, color: COLORS.textMuted }}>{q.topic}</div>
+                    <div style={{ fontSize: 16, fontWeight: 600, color: COLORS.secondary, marginBottom: 2 }}>{q.question.length > 70 ? q.question.slice(0, 70) + "..." : q.question}</div>
+                    <div style={{ fontSize: 14, color: COLORS.textMuted }}>{q.topic}</div>
                   </div>
                   <span style={{ fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 20, background: DIFF_STYLE[q.difficulty].bg, color: DIFF_STYLE[q.difficulty].color }}>{q.difficulty}</span>
                 </div>
@@ -203,8 +203,8 @@ export default function Aptitude() {
           <div style={{ maxWidth: 680, margin: "0 auto" }}>
             {/* Progress bar */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <button onClick={() => setMode("browse")} style={{ background: COLORS.bgCard, border: "none", color: COLORS.secondary, padding: "7px 14px", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>← Exit Quiz</button>
-              <span style={{ fontSize: 13, color: COLORS.textMuted, fontWeight: 600 }}>Question {current + 1} of {quizQuestions.length}</span>
+              <button onClick={() => setMode("browse")} style={{ background: COLORS.bgCard, border: "none", color: COLORS.secondary, padding: "7px 14px", borderRadius: 8, fontSize: 14, fontWeight: 600, fontFamily: F.ui, cursor: "pointer" }}>← Exit Quiz</button>
+              <span style={{ fontSize: 14, color: COLORS.textMuted, fontWeight: 600 }}>Question {current + 1} of {quizQuestions.length}</span>
             </div>
             <div style={{ height: 6, background: COLORS.bgCard, borderRadius: 100, marginBottom: 28, overflow: "hidden" }}>
               <div style={{ height: "100%", width: `${((current + 1) / quizQuestions.length) * 100}%`, background: `linear-gradient(90deg, ${COLORS.primary}, ${COLORS.accent})`, borderRadius: 100, transition: "width 0.3s" }} />
@@ -231,7 +231,7 @@ export default function Aptitude() {
                   }
                   return (
                     <div key={opt} onClick={() => !showAnswer && setSelected(opt)}
-                      style={{ padding: "13px 18px", borderRadius: 12, border: `1.5px solid ${border}`, background: bg, color, fontSize: 14, fontWeight: selected === opt || (showAnswer && opt === q.answer) ? 600 : 400, cursor: showAnswer ? "default" : "pointer", transition: "all 0.15s" }}>
+                      style={{ padding: "13px 18px", borderRadius: 12, border: `1.5px solid ${border}`, background: bg, color, fontSize: 16, fontWeight: selected === opt || (showAnswer && opt === q.answer) ? 600 : 400, cursor: showAnswer ? "default" : "pointer", transition: "all 0.15s" }}>
                       {opt}
                     </div>
                   );
@@ -240,8 +240,8 @@ export default function Aptitude() {
 
               {showAnswer && (
                 <div style={{ background: COLORS.bgCard, border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: "14px 16px", marginBottom: 20 }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: COLORS.primary, marginBottom: 6 }}>💡 EXPLANATION</div>
-                  <p style={{ fontSize: 14, color: COLORS.text, lineHeight: 1.6, margin: 0 }}>{q.explanation}</p>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: COLORS.primary, marginBottom: 6 }}>💡 EXPLANATION</div>
+                  <p style={{ fontSize: 16, color: COLORS.text, lineHeight: 1.6, margin: 0 }}>{q.explanation}</p>
                 </div>
               )}
 
@@ -252,7 +252,7 @@ export default function Aptitude() {
                 </button>
               ) : (
                 <button onClick={handleNext}
-                  style={{ width: "100%", padding: "13px", borderRadius: 12, background: COLORS.primary, border: "none", color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
+                  style={{ width: "100%", padding: "13px", borderRadius: 12, background: COLORS.primary, border: "none", color: "#fff", fontSize: 15, fontWeight: 700, fontFamily: F.ui, cursor: "pointer" }}>
                   {current + 1 >= quizQuestions.length ? "See Results →" : "Next Question →"}
                 </button>
               )}
@@ -266,7 +266,7 @@ export default function Aptitude() {
             <div style={{ fontSize: 64, marginBottom: 16 }}>
               {score === quizQuestions.length ? "🎉" : score >= quizQuestions.length / 2 ? "👍" : "💪"}
             </div>
-            <h2 style={{ fontSize: 28, fontWeight: 800, color: COLORS.secondary, marginBottom: 8 }}>
+            <h2 style={{ fontSize: 36, fontWeight: 800, fontFamily: F.display, color: COLORS.secondary, marginBottom: 8 }}>
               {score === quizQuestions.length ? "Perfect Score!" : score >= quizQuestions.length / 2 ? "Good Job!" : "Keep Practicing!"}
             </h2>
             <p style={{ fontSize: 16, color: COLORS.textMuted, marginBottom: 32 }}>
@@ -280,8 +280,8 @@ export default function Aptitude() {
                 <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 12, paddingBottom: 12, borderBottom: i < answers.length - 1 ? `1px solid ${COLORS.border}` : "none" }}>
                   <span style={{ fontSize: 16, flexShrink: 0 }}>{a.correct ? "✅" : "❌"}</span>
                   <div>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: COLORS.secondary }}>{a.question.question.slice(0, 60)}...</div>
-                    {!a.correct && <div style={{ fontSize: 12, color: "#DC2626", marginTop: 2 }}>Correct: {a.question.answer}</div>}
+                    <div style={{ fontSize: 14, fontWeight: 600, color: COLORS.secondary }}>{a.question.question.slice(0, 60)}...</div>
+                    {!a.correct && <div style={{ fontSize: 14, color: "#DC2626", marginTop: 2 }}>Correct: {a.question.answer}</div>}
                   </div>
                 </div>
               ))}
@@ -289,11 +289,11 @@ export default function Aptitude() {
 
             <div style={{ display: "flex", gap: 12 }}>
               <button onClick={() => startQuiz(quizQuestions)}
-                style={{ flex: 1, padding: "13px", borderRadius: 12, background: COLORS.primary, border: "none", color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
+                style={{ flex: 1, padding: "13px", borderRadius: 12, background: COLORS.primary, border: "none", color: "#fff", fontSize: 15, fontWeight: 700, fontFamily: F.ui, cursor: "pointer" }}>
                 Retry Quiz
               </button>
               <button onClick={() => setMode("browse")}
-                style={{ flex: 1, padding: "13px", borderRadius: 12, background: "transparent", border: `1.5px solid ${COLORS.border}`, color: COLORS.secondary, fontSize: 15, fontWeight: 600, cursor: "pointer" }}>
+                style={{ flex: 1, padding: "13px", borderRadius: 12, background: "transparent", border: `1.5px solid ${COLORS.border}`, color: COLORS.secondary, fontSize: 15, fontWeight: 600, fontFamily: F.ui, cursor: "pointer" }}>
                 Browse More
               </button>
             </div>

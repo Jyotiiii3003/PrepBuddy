@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from "recharts";
 import { generateStudyPlan } from "../utils/gemini";
-
+import { F} from "../utils/theme";
 const COLORS = {
   primary: "#16A34A",
   secondary: "#14532D",
@@ -143,22 +143,22 @@ export default function Planner() {
   ];
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: COLORS.bg, fontFamily: "'DM Sans','Segoe UI',sans-serif" }}>
+    <div style={{ display: "flex", minHeight: "100vh", background: COLORS.bg, fontFamily: F.body }}>
 
       {/* SIDEBAR */}
       <aside style={{ width: 220, background: COLORS.secondary, display: "flex", flexDirection: "column", padding: "20px 0", flexShrink: 0, position: "sticky", top: 0, height: "100vh" }}>
         <div onClick={() => navigate("/")} style={{ padding: "0 16px 24px", display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
-          <div style={{ width: 28, height: 28, background: COLORS.accent, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}></div>
+          <div style={{ width: 28, height: 28, background: COLORS.accent, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}></div>
           <span style={{ fontSize: 16, fontWeight: 700, color: "#fff" }}>Prep<span style={{ color: COLORS.accent }}>Buddy</span></span>
         </div>
         {NAV.map(item => (
           <div key={item.label} onClick={() => navigate(item.path)}
-            style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 20px", margin: "2px 8px", borderRadius: 10, cursor: "pointer", background: item.active ? "rgba(74,222,128,0.15)" : "transparent", borderLeft: item.active ? `3px solid ${COLORS.accent}` : "3px solid transparent" }}
+            style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 20px", margin: "2px 8px", borderRadius: 10, fontFamily: F.ui, cursor: "pointer", background: item.active ? "rgba(74,222,128,0.15)" : "transparent", borderLeft: item.active ? `3px solid ${COLORS.accent}` : "3px solid transparent" }}
             onMouseEnter={e => !item.active && (e.currentTarget.style.background = "rgba(255,255,255,0.07)")}
             onMouseLeave={e => !item.active && (e.currentTarget.style.background = "transparent")}
           >
             <span style={{ fontSize: 18 }}>{item.icon}</span>
-            <span style={{ fontSize: 14, fontWeight: item.active ? 600 : 400, color: item.active ? COLORS.accent : "#86EFAC" }}>{item.label}</span>
+            <span style={{ fontSize: 16, fontWeight: item.active ? 600 : 400, color: item.active ? COLORS.accent : "#86EFAC" }}>{item.label}</span>
           </div>
         ))}
       </aside>
@@ -169,12 +169,12 @@ export default function Planner() {
         {/* HEADER */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>
           <div>
-            <h1 style={{ fontSize: 24, fontWeight: 800, color: COLORS.secondary, marginBottom: 4 }}> Study Planner</h1>
-            <p style={{ fontSize: 14, color: COLORS.textMuted }}>Your AI-powered personalized roadmap</p>
+            <h1 style={{ fontSize: 32, fontWeight: 800, fontFamily: F.display, color: COLORS.secondary, marginBottom: 4 }}> Study Planner</h1>
+            <p style={{ fontSize: 16, color: COLORS.textMuted }}>Your AI-powered personalized roadmap</p>
           </div>
           <div style={{ display: "flex", gap: 10 }}>
             <button onClick={() => setShowForm(!showForm)}
-              style={{ background: COLORS.primary, border: "none", color: "#fff", padding: "10px 20px", borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: "pointer", boxShadow: `0 4px 14px ${COLORS.primary}44` }}>
+              style={{ background: COLORS.primary, border: "none", color: "#fff", padding: "10px 20px", borderRadius: 12, fontSize: 16, fontWeight: 700, fontFamily: F.ui, cursor: "pointer", boxShadow: `0 4px 14px ${COLORS.primary}44` }}>
                Generate AI Plan
             </button>
           </div>
@@ -187,7 +187,7 @@ export default function Planner() {
             { key: "aiplan", label: "AI Plan", },
           ].map(tab => (
             <button key={tab.key} onClick={() => setView(tab.key)}
-              style={{ padding: "9px 20px", borderRadius: 9, border: "none", background: view === tab.key ? COLORS.primary : "transparent", color: view === tab.key ? "#fff" : COLORS.textMuted, fontSize: 14, fontWeight: view === tab.key ? 700 : 500, cursor: "pointer", transition: "all 0.2s" }}>
+              style={{ padding: "9px 20px", borderRadius: 9, border: "none", background: view === tab.key ? COLORS.primary : "transparent", color: view === tab.key ? "#fff" : COLORS.textMuted, fontSize: 16, fontWeight: view === tab.key ? 700 : 500, cursor: "pointer", transition: "all 0.2s" }}>
               {tab.icon} {tab.label}
             </button>
           ))}
@@ -198,31 +198,31 @@ export default function Planner() {
           <div style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 20, padding: "24px", marginBottom: 24 }}>
             <h3 style={{ fontSize: 16, fontWeight: 700, color: COLORS.secondary, marginBottom: 20 }}> Generate Your AI Study Plan</h3>
 
-            {error && <div style={{ background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 10, padding: "10px 14px", marginBottom: 16, fontSize: 13, color: "#DC2626" }}> {error}</div>}
+            {error && <div style={{ background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 10, padding: "10px 14px", marginBottom: 16, fontSize: 14, color: "#DC2626" }}> {error}</div>}
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
               <div>
-                <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: COLORS.secondary, marginBottom: 8 }}>Target Company</label>
+                <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: COLORS.secondary, marginBottom: 8 }}>Target Company</label>
                 <select value={form.company} onChange={e => setForm(f => ({ ...f, company: e.target.value }))}
-                  style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: `1.5px solid ${COLORS.border}`, background: COLORS.bg, fontSize: 14, color: COLORS.text, outline: "none", cursor: "pointer" }}>
+                  style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: `1.5px solid ${COLORS.border}`, background: COLORS.bg, fontSize: 16, color: COLORS.text, outline: "none", fontFamily: F.ui, cursor: "pointer" }}>
                   <option value="">Select company...</option>
                   {COMPANIES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div>
-                <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: COLORS.secondary, marginBottom: 8 }}>Exam / Interview Date</label>
+                <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: COLORS.secondary, marginBottom: 8 }}>Exam / Interview Date</label>
                 <input type="date" value={form.examDate} onChange={e => setForm(f => ({ ...f, examDate: e.target.value }))}
                   min={new Date().toISOString().split("T")[0]}
-                  style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: `1.5px solid ${COLORS.border}`, background: COLORS.bg, fontSize: 14, color: COLORS.text, outline: "none", boxSizing: "border-box" }} />
+                  style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: `1.5px solid ${COLORS.border}`, background: COLORS.bg, fontSize: 16, color: COLORS.text, outline: "none", boxSizing: "border-box" }} />
               </div>
             </div>
 
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: COLORS.secondary, marginBottom: 8 }}>Daily Study Hours</label>
+              <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: COLORS.secondary, marginBottom: 8 }}>Daily Study Hours</label>
               <div style={{ display: "flex", gap: 8 }}>
                 {["1", "2", "3", "4", "5+"].map(h => (
                   <button key={h} onClick={() => setForm(f => ({ ...f, dailyHours: h }))}
-                    style={{ flex: 1, padding: "9px 0", borderRadius: 10, border: `1.5px solid ${form.dailyHours === h ? COLORS.primary : COLORS.border}`, background: form.dailyHours === h ? COLORS.primary : COLORS.white, color: form.dailyHours === h ? "#fff" : COLORS.textMuted, fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
+                    style={{ flex: 1, padding: "9px 0", borderRadius: 10, border: `1.5px solid ${form.dailyHours === h ? COLORS.primary : COLORS.border}`, background: form.dailyHours === h ? COLORS.primary : COLORS.white, color: form.dailyHours === h ? "#fff" : COLORS.textMuted, fontSize: 16, fontWeight: 600, fontFamily: F.ui, cursor: "pointer" }}>
                     {h}
                   </button>
                 ))}
@@ -230,11 +230,11 @@ export default function Planner() {
             </div>
 
             <div style={{ marginBottom: 20 }}>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: COLORS.secondary, marginBottom: 8 }}>Weak Topics <span style={{ color: COLORS.textMuted, fontWeight: 400 }}>(select all that apply)</span></label>
+              <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: COLORS.secondary, marginBottom: 8 }}>Weak Topics <span style={{ color: COLORS.textMuted, fontWeight: 400 }}>(select all that apply)</span></label>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                 {WEAK_TOPICS.map(t => (
                   <button key={t} onClick={() => toggleWeakTopic(t)}
-                    style={{ padding: "6px 14px", borderRadius: 100, border: `1.5px solid ${form.weakTopics.includes(t) ? COLORS.primary : COLORS.border}`, background: form.weakTopics.includes(t) ? COLORS.bgCard : COLORS.white, color: form.weakTopics.includes(t) ? COLORS.primary : COLORS.textMuted, fontSize: 12, fontWeight: form.weakTopics.includes(t) ? 600 : 400, cursor: "pointer" }}>
+                    style={{ padding: "6px 14px", borderRadius: 100, border: `1.5px solid ${form.weakTopics.includes(t) ? COLORS.primary : COLORS.border}`, background: form.weakTopics.includes(t) ? COLORS.bgCard : COLORS.white, color: form.weakTopics.includes(t) ? COLORS.primary : COLORS.textMuted, fontSize: 14, fontWeight: form.weakTopics.includes(t) ? 600 : 400, fontFamily: F.ui, cursor: "pointer" }}>
                     {form.weakTopics.includes(t) ? "✓ " : ""}{t}
                   </button>
                 ))}
@@ -247,7 +247,7 @@ export default function Planner() {
                 {loading ? " Generating your plan..." : " Generate Plan"}
               </button>
               <button onClick={() => setShowForm(false)}
-                style={{ padding: "13px 20px", borderRadius: 12, background: "transparent", border: `1.5px solid ${COLORS.border}`, color: COLORS.secondary, fontSize: 15, fontWeight: 600, cursor: "pointer" }}>
+                style={{ padding: "13px 20px", borderRadius: 12, background: "transparent", border: `1.5px solid ${COLORS.border}`, color: COLORS.secondary, fontSize: 15, fontWeight: 600, fontFamily: F.ui, cursor: "pointer" }}>
                 Cancel
               </button>
             </div>
@@ -267,10 +267,10 @@ export default function Planner() {
               ].map(s => (
                 <div key={s.label} style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 14, padding: "16px 20px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-                    <span style={{ fontSize: 12, color: COLORS.textMuted, fontWeight: 500 }}>{s.label}</span>
+                    <span style={{ fontSize: 14, color: COLORS.textMuted, fontWeight: 500 }}>{s.label}</span>
                     <span style={{ fontSize: 18 }}>{s.icon}</span>
                   </div>
-                  <div style={{ fontSize: 24, fontWeight: 800, color: s.color }}>{s.value}</div>
+                  <div style={{ fontSize: 32, fontWeight: 800, fontFamily: F.display, color: s.color }}>{s.value}</div>
                 </div>
               ))}
             </div>
@@ -278,8 +278,8 @@ export default function Planner() {
             {/* Progress bar */}
             <div style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 16, padding: "18px 24px", marginBottom: 24 }}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-                <span style={{ fontSize: 13, fontWeight: 600, color: COLORS.secondary }}>Weekly Progress</span>
-                <span style={{ fontSize: 13, color: COLORS.textMuted }}>{progress}% complete</span>
+                <span style={{ fontSize: 14, fontWeight: 600, color: COLORS.secondary }}>Weekly Progress</span>
+                <span style={{ fontSize: 14, color: COLORS.textMuted }}>{progress}% complete</span>
               </div>
               <div style={{ height: 10, background: COLORS.bgCard, borderRadius: 100, overflow: "hidden" }}>
                 <div style={{ height: "100%", width: `${progress}%`, background: `linear-gradient(90deg, ${COLORS.primary}, ${COLORS.accent})`, borderRadius: 100, transition: "width 0.5s" }} />
@@ -289,7 +289,7 @@ export default function Planner() {
             {/* Activity Chart */}
             <div style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 20, padding: "20px 24px", marginBottom: 24 }}>
               <h3 style={{ fontSize: 15, fontWeight: 700, color: COLORS.secondary, marginBottom: 4 }}>Weekly Activity</h3>
-              <p style={{ fontSize: 12, color: COLORS.textMuted, marginBottom: 16 }}>Problems solved per day</p>
+              <p style={{ fontSize: 14, color: COLORS.textMuted, marginBottom: 16 }}>Problems solved per day</p>
               <ResponsiveContainer width="100%" height={180}>
                 <AreaChart data={WEEKLY_PROGRESS}>
                   <defs>
@@ -298,9 +298,9 @@ export default function Planner() {
                       <stop offset="95%" stopColor={COLORS.primary} stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <XAxis dataKey="day" tick={{ fontSize: 12, fill: COLORS.textMuted }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 12, fill: COLORS.textMuted }} axisLine={false} tickLine={false} />
-                  <Tooltip contentStyle={{ background: "#fff", border: `1px solid ${COLORS.border}`, borderRadius: 10, fontSize: 13 }} />
+                  <XAxis dataKey="day" tick={{ fontSize: 14, fill: COLORS.textMuted }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 14, fill: COLORS.textMuted }} axisLine={false} tickLine={false} />
+                  <Tooltip contentStyle={{ background: "#fff", border: `1px solid ${COLORS.border}`, borderRadius: 10, fontSize: 14 }} />
                   <Area type="monotone" dataKey="value" stroke={COLORS.primary} strokeWidth={2.5} fill="url(#greenGrad)" dot={{ fill: COLORS.primary, r: 4 }} />
                 </AreaChart>
               </ResponsiveContainer>
@@ -311,18 +311,18 @@ export default function Planner() {
               <div key={day.day} style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 20, padding: "20px 24px", marginBottom: 16 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
                   <h3 style={{ fontSize: 15, fontWeight: 700, color: COLORS.secondary, margin: 0 }}>{day.day}</h3>
-                  <span style={{ fontSize: 12, color: COLORS.textMuted }}>
+                  <span style={{ fontSize: 14, color: COLORS.textMuted }}>
                     {day.tasks.filter(t => t.done).length}/{day.tasks.length} done
                   </span>
                 </div>
                 {day.tasks.map((task, tIndex) => (
                   <div key={tIndex} onClick={() => toggleTask(dIndex, tIndex)}
-                    style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 14px", borderRadius: 12, marginBottom: 8, cursor: "pointer", background: task.done ? COLORS.bgCard : COLORS.bg, opacity: task.done ? 0.7 : 1, transition: "all 0.2s" }}>
-                    <div style={{ width: 22, height: 22, borderRadius: "50%", border: `2px solid ${task.done ? COLORS.primary : COLORS.border}`, background: task.done ? COLORS.primary : "transparent", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: "#fff", flexShrink: 0, transition: "all 0.2s" }}>
+                    style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 14px", borderRadius: 12, marginBottom: 8, fontFamily: F.ui, cursor: "pointer", background: task.done ? COLORS.bgCard : COLORS.bg, opacity: task.done ? 0.7 : 1, transition: "all 0.2s" }}>
+                    <div style={{ width: 22, height: 22, borderRadius: "50%", border: `2px solid ${task.done ? COLORS.primary : COLORS.border}`, background: task.done ? COLORS.primary : "transparent", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, color: "#fff", flexShrink: 0, transition: "all 0.2s" }}>
                       {task.done ? "✓" : ""}
                     </div>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 14, fontWeight: 600, color: COLORS.secondary, textDecoration: task.done ? "line-through" : "none" }}>{task.task}</div>
+                      <div style={{ fontSize: 16, fontWeight: 600, color: COLORS.secondary, textDecoration: task.done ? "line-through" : "none" }}>{task.task}</div>
                       <div style={{ fontSize: 11, color: COLORS.textMuted }}>{task.time}</div>
                     </div>
                     <span style={{ fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 20, background: TASK_TYPE_STYLE[task.type]?.bg || COLORS.bgCard, color: TASK_TYPE_STYLE[task.type]?.color || COLORS.primary }}>
@@ -341,10 +341,10 @@ export default function Planner() {
             {!plan ? (
               <div style={{ background: COLORS.white, border: `2px dashed ${COLORS.border}`, borderRadius: 20, padding: "60px 40px", textAlign: "center" }}>
                 <div style={{ fontSize: 48, marginBottom: 16 }}></div>
-                <h3 style={{ fontSize: 20, fontWeight: 700, color: COLORS.secondary, marginBottom: 10 }}>No AI Plan Yet</h3>
-                <p style={{ fontSize: 14, color: COLORS.textMuted, marginBottom: 24 }}>Click the Generate AI Plan button above to create your personalized study roadmap.</p>
+                <h3 style={{ fontSize: 32, fontWeight: 700, fontFamily: F.mono, color: COLORS.secondary, marginBottom: 10 }}>No AI Plan Yet</h3>
+                <p style={{ fontSize: 16, color: COLORS.textMuted, marginBottom: 24 }}>Click the Generate AI Plan button above to create your personalized study roadmap.</p>
                 <button onClick={() => setShowForm(true)}
-                  style={{ background: COLORS.primary, border: "none", color: "#fff", padding: "12px 28px", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
+                  style={{ background: COLORS.primary, border: "none", color: "#fff", padding: "12px 28px", borderRadius: 12, fontSize: 15, fontWeight: 700, fontFamily: F.ui, cursor: "pointer" }}>
                    Generate My Plan
                 </button>
               </div>
@@ -352,19 +352,19 @@ export default function Planner() {
               <>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
                   <div>
-                    <p style={{ fontSize: 14, color: COLORS.textMuted }}>
+                    <p style={{ fontSize: 16, color: COLORS.textMuted }}>
                       Targeting <strong>{form.company}</strong> · {form.dailyHours} hrs/day · {plan.length} days
                     </p>
                   </div>
                   <div style={{ display: "flex", gap: 10 }}>
                     {weeks.length > 1 && weeks.map((_, i) => (
                       <button key={i} onClick={() => setActiveWeek(i)}
-                        style={{ padding: "7px 18px", borderRadius: 100, border: `1.5px solid ${activeWeek === i ? COLORS.primary : COLORS.border}`, background: activeWeek === i ? COLORS.primary : COLORS.white, color: activeWeek === i ? "#fff" : COLORS.textMuted, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                        style={{ padding: "7px 18px", borderRadius: 100, border: `1.5px solid ${activeWeek === i ? COLORS.primary : COLORS.border}`, background: activeWeek === i ? COLORS.primary : COLORS.white, color: activeWeek === i ? "#fff" : COLORS.textMuted, fontSize: 14, fontWeight: 600, fontFamily: F.ui, cursor: "pointer" }}>
                         Week {i + 1}
                       </button>
                     ))}
                     <button onClick={() => setShowForm(true)}
-                      style={{ background: "transparent", border: `1.5px solid ${COLORS.border}`, color: COLORS.secondary, padding: "7px 16px", borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+                      style={{ background: "transparent", border: `1.5px solid ${COLORS.border}`, color: COLORS.secondary, padding: "7px 16px", borderRadius: 10, fontSize: 14, fontWeight: 600, fontFamily: F.ui, cursor: "pointer" }}>
                        Regenerate
                     </button>
                   </div>
@@ -373,8 +373,8 @@ export default function Planner() {
                 {/* Plan completion */}
                 <div style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 16, padding: "18px 24px", marginBottom: 24 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-                    <span style={{ fontSize: 13, fontWeight: 600, color: COLORS.secondary }}>Plan Completion</span>
-                    <span style={{ fontSize: 13, color: COLORS.textMuted }}>{completedCount}/{plan.length} days</span>
+                    <span style={{ fontSize: 14, fontWeight: 600, color: COLORS.secondary }}>Plan Completion</span>
+                    <span style={{ fontSize: 14, color: COLORS.textMuted }}>{completedCount}/{plan.length} days</span>
                   </div>
                   <div style={{ height: 10, background: COLORS.bgCard, borderRadius: 100, overflow: "hidden" }}>
                     <div style={{ height: "100%", width: plan.length ? `${(completedCount / plan.length) * 100}%` : "0%", background: `linear-gradient(90deg, ${COLORS.primary}, ${COLORS.accent})`, borderRadius: 100, transition: "width 0.4s" }} />
@@ -395,27 +395,27 @@ export default function Planner() {
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
                           <div>
                             <div style={{ fontSize: 11, fontWeight: 700, color: COLORS.textMuted, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>{day.day}</div>
-                            <div style={{ fontSize: 14, fontWeight: 700, color: done ? COLORS.textMuted : COLORS.secondary, textDecoration: done ? "line-through" : "none" }}>{day.topic}</div>
+                            <div style={{ fontSize: 16, fontWeight: 700, color: done ? COLORS.textMuted : COLORS.secondary, textDecoration: done ? "line-through" : "none" }}>{day.topic}</div>
                           </div>
                           <button onClick={() => toggleDay(globalIndex)}
-                            style={{ width: 26, height: 26, borderRadius: "50%", border: `2px solid ${done ? COLORS.primary : COLORS.border}`, background: done ? COLORS.primary : "transparent", color: "#fff", fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all 0.2s" }}>
+                            style={{ width: 26, height: 26, borderRadius: "50%", border: `2px solid ${done ? COLORS.primary : COLORS.border}`, background: done ? COLORS.primary : "transparent", color: "#fff", fontSize: 14, fontFamily: F.ui, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, transition: "all 0.2s" }}>
                             {done ? "✓" : ""}
                           </button>
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 14 }}>
                           <div style={{ display: "flex", justifyContent: "space-between" }}>
-                            <span style={{ fontSize: 12, color: COLORS.textMuted }}>Problems</span>
-                            <span style={{ fontSize: 12, fontWeight: 600, color: COLORS.primary }}>{day.problems}</span>
+                            <span style={{ fontSize: 14, color: COLORS.textMuted }}>Problems</span>
+                            <span style={{ fontSize: 14, fontWeight: 600, color: COLORS.primary }}>{day.problems}</span>
                           </div>
                           <div style={{ display: "flex", justifyContent: "space-between" }}>
-                            <span style={{ fontSize: 12, color: COLORS.textMuted }}>Aptitude</span>
-                            <span style={{ fontSize: 12, fontWeight: 600, color: "#854D0E" }}>{day.aptitude}</span>
+                            <span style={{ fontSize: 14, color: COLORS.textMuted }}>Aptitude</span>
+                            <span style={{ fontSize: 14, fontWeight: 600, color: "#854D0E" }}>{day.aptitude}</span>
                           </div>
                         </div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                           <span style={{ fontSize: 10, fontWeight: 600, padding: "2px 10px", borderRadius: 20, background: ts.bg, color: ts.color }}>{ts.label}</span>
                           {!done && (
-                            <button onClick={() => navigate("/dsa")} style={{ fontSize: 12, color: COLORS.primary, fontWeight: 600, background: "none", border: "none", cursor: "pointer", padding: 0 }}>Start →</button>
+                            <button onClick={() => navigate("/dsa")} style={{ fontSize: 14, color: COLORS.primary, fontWeight: 600, background: "none", border: "none", fontFamily: F.ui, cursor: "pointer", padding: 0 }}>Start →</button>
                           )}
                         </div>
                       </div>
@@ -431,8 +431,8 @@ export default function Planner() {
         <div style={{ marginTop: 28, background: COLORS.secondary, borderRadius: 18, padding: "20px 28px", display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
           <div style={{ width: 44, height: 44, background: "rgba(74,222,128,0.15)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>🧠</div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 4 }}>AI Tip</div>
-            <div style={{ fontSize: 13, color: "#86EFAC" }}>Consistency beats intensity. Two focused hours daily beats eight hours on weekends. Mark each day done to build your streak!</div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 4 }}>AI Tip</div>
+            <div style={{ fontSize: 14, color: "#86EFAC" }}>Consistency beats intensity. Two focused hours daily beats eight hours on weekends. Mark each day done to build your streak!</div>
           </div>
         </div>
 

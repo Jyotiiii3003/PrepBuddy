@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../utils/supabase";
-
+import { F } from "../utils/theme";
 const COLORS = {
   primary: "#16A34A",
   secondary: "#14532D",
@@ -44,7 +44,7 @@ export default function Login() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: COLORS.bg, display: "flex", fontFamily: "'DM Sans','Segoe UI',sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: COLORS.bg, display: "flex", fontFamily: F.body }}>
 
       {/* LEFT PANEL */}
       <div style={{ flex: 1, background: COLORS.secondary, display: "flex", flexDirection: "column", justifyContent: "center", padding: "60px 56px", position: "relative", overflow: "hidden" }}>
@@ -55,7 +55,7 @@ export default function Login() {
           onClick={() => navigate("/")}
           style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 56, cursor: "pointer" }}>
           <div style={{ width: 32, height: 32, background: COLORS.accent, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>⚡</div>
-          <span style={{ fontSize: 20, fontWeight: 700, color: "#fff" }}>
+          <span style={{ fontSize: 32, fontWeight: 700, fontFamily: F.mono, color: "#fff" }}>
             Prep<span style={{ color: COLORS.accent }}>Buddy</span>
           </span>
         </div>
@@ -78,7 +78,7 @@ export default function Login() {
             <div style={{ width: 36, height: 36, background: "rgba(74,222,128,0.12)", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>
               {item.icon}
             </div>
-            <span style={{ fontSize: 14, color: "#bbf7d0" }}>{item.text}</span>
+            <span style={{ fontSize: 16, color: "#bbf7d0" }}>{item.text}</span>
           </div>
         ))}
       </div>
@@ -87,28 +87,28 @@ export default function Login() {
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 2rem" }}>
         <div style={{ width: "100%", maxWidth: 420 }}>
 
-          <h1 style={{ fontSize: 28, fontWeight: 800, color: COLORS.secondary, marginBottom: 8, letterSpacing: "-0.02em" }}>
+          <h1 style={{ fontSize: 36, fontWeight: 800, fontFamily: F.display, color: COLORS.secondary, marginBottom: 8, letterSpacing: "-0.02em" }}>
             Sign in
           </h1>
-          <p style={{ fontSize: 14, color: COLORS.textMuted, marginBottom: 36 }}>
+          <p style={{ fontSize: 16, color: COLORS.textMuted, marginBottom: 36 }}>
             Don't have an account?{" "}
             <span
               onClick={() => navigate("/signup")}
-              style={{ color: COLORS.primary, fontWeight: 600, cursor: "pointer", textDecoration: "underline" }}>
+              style={{ color: COLORS.primary, fontWeight: 600, fontFamily: F.ui, cursor: "pointer", textDecoration: "underline" }}>
               Create one free
             </span>
           </p>
 
           {/* Error */}
           {error && (
-            <div style={{ background: COLORS.errorBg, border: `1px solid #FECACA`, borderRadius: 10, padding: "12px 16px", marginBottom: 20, fontSize: 14, color: COLORS.error }}>
+            <div style={{ background: COLORS.errorBg, border: `1px solid #FECACA`, borderRadius: 10, padding: "12px 16px", marginBottom: 20, fontSize: 16, color: COLORS.error }}>
               ⚠️ {error}
             </div>
           )}
 
           {/* Email */}
           <div style={{ marginBottom: 18 }}>
-            <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: COLORS.secondary, marginBottom: 8 }}>
+            <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: COLORS.secondary, marginBottom: 8 }}>
               Email address
             </label>
             <input
@@ -125,7 +125,7 @@ export default function Login() {
 
           {/* Password */}
           <div style={{ marginBottom: 12 }}>
-            <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: COLORS.secondary, marginBottom: 8 }}>
+            <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: COLORS.secondary, marginBottom: 8 }}>
               Password
             </label>
             <div style={{ position: "relative" }}>
@@ -142,14 +142,14 @@ export default function Login() {
               />
               <button
                 onClick={() => setShowPass(!showPass)}
-                style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", fontSize: 16, color: COLORS.textMuted }}>
+                style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", fontFamily: F.ui, cursor: "pointer", fontSize: 16, color: COLORS.textMuted }}>
                 {showPass ? "🙈" : "👁️"}
               </button>
             </div>
           </div>
 
           <div style={{ textAlign: "right", marginBottom: 28 }}>
-            <span style={{ fontSize: 13, color: COLORS.primary, fontWeight: 600, cursor: "pointer" }}>
+            <span style={{ fontSize: 14, color: COLORS.primary, fontWeight: 600, fontFamily: F.ui, cursor: "pointer" }}>
               Forgot password?
             </span>
           </div>
@@ -166,7 +166,7 @@ export default function Login() {
 
           <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "24px 0" }}>
             <div style={{ flex: 1, height: 1, background: COLORS.border }} />
-            <span style={{ fontSize: 13, color: COLORS.textMuted }}>or</span>
+            <span style={{ fontSize: 14, color: COLORS.textMuted }}>or</span>
             <div style={{ flex: 1, height: 1, background: COLORS.border }} />
           </div>
 
@@ -174,12 +174,12 @@ export default function Login() {
           <button
             onMouseEnter={e => e.currentTarget.style.background = COLORS.bgCard}
             onMouseLeave={e => e.currentTarget.style.background = "#fff"}
-            style={{ width: "100%", padding: "13px", borderRadius: 12, background: "#fff", border: `1.5px solid ${COLORS.border}`, color: COLORS.secondary, fontSize: 15, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, transition: "background 0.2s" }}>
+            style={{ width: "100%", padding: "13px", borderRadius: 12, background: "#fff", border: `1.5px solid ${COLORS.border}`, color: COLORS.secondary, fontSize: 15, fontWeight: 600, fontFamily: F.ui, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, transition: "background 0.2s" }}>
             <span style={{ fontSize: 18 }}>🔵</span>
             Continue with Google
           </button>
 
-          <p style={{ fontSize: 12, color: COLORS.textMuted, textAlign: "center", marginTop: 28, lineHeight: 1.6 }}>
+          <p style={{ fontSize: 14, color: COLORS.textMuted, textAlign: "center", marginTop: 28, lineHeight: 1.6 }}>
             By signing in you agree to our{" "}
             <span style={{ color: COLORS.primary, cursor: "pointer" }}>Terms</span> and{" "}
             <span style={{ color: COLORS.primary, cursor: "pointer" }}>Privacy Policy</span>

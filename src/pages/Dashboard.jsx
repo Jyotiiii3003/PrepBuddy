@@ -5,7 +5,7 @@ import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis,
   Tooltip, AreaChart, Area
 } from "recharts";
-
+import { F } from "../utils/theme";
 const COLORS = {
   primary: "#16A34A",
   secondary: "#14532D",
@@ -101,7 +101,7 @@ export default function Dashboard() {
   ];
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: COLORS.bg, fontFamily: "'DM Sans','Segoe UI',sans-serif" }}>
+    <div style={{ display: "flex", minHeight: "100vh", background: COLORS.bg, fontFamily: F.body }}>
 
       {/* SIDEBAR */}
       <aside style={{
@@ -121,13 +121,13 @@ export default function Dashboard() {
         <div style={{ padding: "0 16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           {sidebarOpen && (
             <div onClick={() => navigate("/")} style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
-              <div style={{ width: 28, height: 28, background: COLORS.accent, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>⚡</div>
+              <div style={{ width: 28, height: 28, background: COLORS.accent, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>⚡</div>
               <span style={{ fontSize: 16, fontWeight: 700, color: "#fff" }}>Prep<span style={{ color: COLORS.accent }}>Buddy</span></span>
             </div>
           )}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            style={{ background: "rgba(255,255,255,0.08)", border: "none", color: "#fff", width: 28, height: 28, borderRadius: 7, cursor: "pointer", fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            style={{ background: "rgba(255,255,255,0.08)", border: "none", color: "#fff", width: 28, height: 28, borderRadius: 7, fontFamily: F.ui, cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
             {sidebarOpen ? "◀" : "▶"}
           </button>
         </div>
@@ -159,7 +159,7 @@ export default function Dashboard() {
             onMouseLeave={e => !item.active && (e.currentTarget.style.background = "transparent")}
           >
             <span style={{ fontSize: 18, flexShrink: 0 }}>{item.icon}</span>
-            {sidebarOpen && <span style={{ fontSize: 14, fontWeight: item.active ? 600 : 400, color: item.active ? COLORS.accent : "#86EFAC", whiteSpace: "nowrap" }}>{item.label}</span>}
+            {sidebarOpen && <span style={{ fontSize: 16, fontWeight: item.active ? 600 : 400, color: item.active ? COLORS.accent : "#86EFAC", whiteSpace: "nowrap" }}>{item.label}</span>}
           </div>
         ))}
 
@@ -172,7 +172,7 @@ export default function Dashboard() {
             onMouseLeave={e => e.currentTarget.style.background = "transparent"}
           >
             <span style={{ fontSize: 18 }}></span>
-            {sidebarOpen && <span style={{ fontSize: 14, color: "#86EFAC" }}>Logout</span>}
+            {sidebarOpen && <span style={{ fontSize: 16, color: "#86EFAC" }}>Logout</span>}
           </div>
         </div>
       </aside>
@@ -183,17 +183,17 @@ export default function Dashboard() {
         {/* TOP BAR */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28, flexWrap: "wrap", gap: 12 }}>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: COLORS.secondary, marginBottom: 4 }}>
+            <h1 style={{ fontSize: 32, fontWeight: 800, fontFamily: F.display, color: COLORS.secondary, marginBottom: 4 }}>
               {greeting}, Jyoti 
             </h1>
-            <p style={{ fontSize: 14, color: COLORS.textMuted }}>
+            <p style={{ fontSize: 16, color: COLORS.textMuted }}>
               You have 2 tasks left for today. Keep going!
             </p>
           </div>
 
           {/* Mood check-in */}
           <div style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 14, padding: "10px 16px", display: "flex", alignItems: "center", gap: 12 }}>
-            <span style={{ fontSize: 13, fontWeight: 600, color: COLORS.secondary }}>Today's mood:</span>
+            <span style={{ fontSize: 14, fontWeight: 600, color: COLORS.secondary }}>Today's mood:</span>
             <div style={{ display: "flex", gap: 6 }}>
               {MOODS.map((m) => (
                 <button
@@ -203,7 +203,7 @@ export default function Dashboard() {
                   style={{
                     background: moodSelected === m.label ? `${m.color}22` : "transparent",
                     border: moodSelected === m.label ? `1.5px solid ${m.color}` : "1.5px solid transparent",
-                    borderRadius: 8, padding: "4px 8px", cursor: "pointer", fontSize: 18,
+                    borderRadius: 8, padding: "4px 8px", fontFamily: F.ui, cursor: "pointer", fontSize: 18,
                     transition: "all 0.2s",
                   }}>
                   {m.emoji}
@@ -223,11 +223,11 @@ export default function Dashboard() {
           ].map((card) => (
             <div key={card.label} style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 16, padding: "20px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
-                <span style={{ fontSize: 13, color: COLORS.textMuted, fontWeight: 500 }}>{card.label}</span>
+                <span style={{ fontSize: 14, color: COLORS.textMuted, fontWeight: 500 }}>{card.label}</span>
                 <span style={{ fontSize: 20 }}>{card.icon}</span>
               </div>
-              <div style={{ fontSize: 28, fontWeight: 800, color: card.color, marginBottom: 4 }}>{card.value}</div>
-              <div style={{ fontSize: 12, color: COLORS.textMuted }}>{card.sub}</div>
+              <div style={{ fontSize: 36, fontWeight: 800, fontFamily: F.display, color: card.color, marginBottom: 4 }}>{card.value}</div>
+              <div style={{ fontSize: 14, color: COLORS.textMuted }}>{card.sub}</div>
             </div>
           ))}
         </div>
@@ -239,7 +239,7 @@ export default function Dashboard() {
           <div style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 20, padding: "24px" }}>
             <div style={{ marginBottom: 4 }}>
               <h3 style={{ fontSize: 15, fontWeight: 700, color: COLORS.secondary, margin: 0 }}>Skill Radar</h3>
-              <p style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 4 }}>Your strengths and blind spots</p>
+              <p style={{ fontSize: 14, color: COLORS.textMuted, marginTop: 4 }}>Your strengths and blind spots</p>
             </div>
             <ResponsiveContainer width="100%" height={260}>
               <RadarChart data={RADAR_DATA}>
@@ -257,7 +257,7 @@ export default function Dashboard() {
           {/* Weekly Progress */}
           <div style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 20, padding: "24px" }}>
             <h3 style={{ fontSize: 15, fontWeight: 700, color: COLORS.secondary, marginBottom: 4 }}>Weekly Activity</h3>
-            <p style={{ fontSize: 12, color: COLORS.textMuted, marginBottom: 16 }}>Problems solved this week</p>
+            <p style={{ fontSize: 14, color: COLORS.textMuted, marginBottom: 16 }}>Problems solved this week</p>
             <ResponsiveContainer width="100%" height={220}>
               <AreaChart data={PROGRESS_DATA}>
                 <defs>
@@ -266,10 +266,10 @@ export default function Dashboard() {
                     <stop offset="95%" stopColor={COLORS.primary} stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="day" tick={{ fontSize: 12, fill: COLORS.textMuted }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 12, fill: COLORS.textMuted }} axisLine={false} tickLine={false} />
+                <XAxis dataKey="day" tick={{ fontSize: 14, fill: COLORS.textMuted }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 14, fill: COLORS.textMuted }} axisLine={false} tickLine={false} />
                 <Tooltip
-                  contentStyle={{ background: "#fff", border: `1px solid ${COLORS.border}`, borderRadius: 10, fontSize: 13 }}
+                  contentStyle={{ background: "#fff", border: `1px solid ${COLORS.border}`, borderRadius: 10, fontSize: 14 }}
                   formatter={(v) => [`${v} problems`, ""]}
                 />
                 <Area type="monotone" dataKey="problems" stroke={COLORS.primary} strokeWidth={2.5} fill="url(#greenGrad)" dot={{ fill: COLORS.primary, strokeWidth: 2, r: 4 }} />
@@ -286,11 +286,11 @@ export default function Dashboard() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <div>
                 <h3 style={{ fontSize: 15, fontWeight: 700, color: COLORS.secondary, margin: 0 }}>Today's Plan</h3>
-                <p style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 4 }}>2 of 4 completed</p>
+                <p style={{ fontSize: 14, color: COLORS.textMuted, marginTop: 4 }}>2 of 4 completed</p>
               </div>
               <button
                 onClick={() => navigate("/planner")}
-                style={{ fontSize: 12, color: COLORS.primary, fontWeight: 600, background: COLORS.bgCard, border: "none", padding: "6px 12px", borderRadius: 8, cursor: "pointer" }}>
+                style={{ fontSize: 14, color: COLORS.primary, fontWeight: 600, background: COLORS.bgCard, border: "none", padding: "6px 12px", borderRadius: 8, fontFamily: F.ui, cursor: "pointer" }}>
                 Full Plan →
               </button>
             </div>
@@ -301,7 +301,7 @@ export default function Dashboard() {
                   {item.done ? "✓" : ""}
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: COLORS.secondary, textDecoration: item.done ? "line-through" : "none" }}>{item.task}</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: COLORS.secondary, textDecoration: item.done ? "line-through" : "none" }}>{item.task}</div>
                   <div style={{ fontSize: 11, color: COLORS.textMuted }}>{item.time}</div>
                 </div>
                 <span style={{
@@ -320,11 +320,11 @@ export default function Dashboard() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <div>
                 <h3 style={{ fontSize: 15, fontWeight: 700, color: COLORS.secondary, margin: 0 }}>Recent Problems</h3>
-                <p style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 4 }}>Your last 5 attempts</p>
+                <p style={{ fontSize: 14, color: COLORS.textMuted, marginTop: 4 }}>Your last 5 attempts</p>
               </div>
               <button
                 onClick={() => navigate("/dsa")}
-                style={{ fontSize: 12, color: COLORS.primary, fontWeight: 600, background: COLORS.bgCard, border: "none", padding: "6px 12px", borderRadius: 8, cursor: "pointer" }}>
+                style={{ fontSize: 14, color: COLORS.primary, fontWeight: 600, background: COLORS.bgCard, border: "none", padding: "6px 12px", borderRadius: 8, fontFamily: F.ui, cursor: "pointer" }}>
                 All Problems →
               </button>
             </div>
@@ -337,7 +337,7 @@ export default function Dashboard() {
                 >
                   <span style={{ fontSize: 16 }}>{STATUS_ICONS[p.status].icon}</span>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: COLORS.secondary }}>{p.title}</div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: COLORS.secondary }}>{p.title}</div>
                     <div style={{ fontSize: 11, color: COLORS.textMuted }}>{p.topic}</div>
                   </div>
                   <span style={{ fontSize: 11, fontWeight: 600, padding: "2px 10px", borderRadius: 20, background: DIFF_COLORS[p.difficulty].bg, color: DIFF_COLORS[p.difficulty].text }}>
@@ -354,13 +354,13 @@ export default function Dashboard() {
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             <div style={{ width: 44, height: 44, background: "rgba(74,222,128,0.15)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>🧠</div>
             <div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 4 }}>AI Suggestion for you</div>
-              <div style={{ fontSize: 13, color: "#86EFAC" }}>Your DP score is 40% — lower than your target. Solve 3 DP problems today to close the gap.</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 4 }}>AI Suggestion for you</div>
+              <div style={{ fontSize: 14, color: "#86EFAC" }}>Your DP score is 40% — lower than your target. Solve 3 DP problems today to close the gap.</div>
             </div>
           </div>
           <button
             onClick={() => navigate("/dsa")}
-            style={{ background: COLORS.accent, border: "none", color: COLORS.secondary, padding: "10px 22px", borderRadius: 10, fontSize: 14, fontWeight: 700, cursor: "pointer", flexShrink: 0 }}>
+            style={{ background: COLORS.accent, border: "none", color: COLORS.secondary, padding: "10px 22px", borderRadius: 10, fontSize: 16, fontWeight: 700, fontFamily: F.ui, cursor: "pointer", flexShrink: 0 }}>
             Practice DP →
           </button>
         </div>
