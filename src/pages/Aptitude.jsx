@@ -85,11 +85,11 @@ export default function Aptitude() {
   const q = quizQuestions[current];
 
   const NAV = [
-    { icon: "🏠", label: "Dashboard", path: "/dashboard" },
-    { icon: "💻", label: "DSA Practice", path: "/dsa" },
-    { icon: "🧮", label: "Aptitude", path: "/aptitude", active: true },
-    { icon: "📅", label: "Study Planner", path: "/planner" },
-    { icon: "👥", label: "Community", path: "/community" },
+    {  label: "Dashboard", path: "/dashboard" },
+    {  label: "DSA Practice", path: "/dsa" },
+    {  label: "Aptitude", path: "/aptitude", active: true },
+    {  label: "Study Planner", path: "/planner" },
+    {  label: "Community", path: "/community" },
   ];
 
   return (
@@ -134,10 +134,10 @@ export default function Aptitude() {
             {/* Stats Row */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 14, marginBottom: 24 }}>
               {[
-                { label: "Total Questions", value: QUESTIONS.length, icon: "📝", color: COLORS.primary },
-                { label: "Quant", value: QUESTIONS.filter(q => q.topic === "Quant").length, icon: "🧮", color: "#2563EB" },
-                { label: "Logical", value: QUESTIONS.filter(q => q.topic === "Logical").length, icon: "🧩", color: "#7C3AED" },
-                { label: "Verbal", value: QUESTIONS.filter(q => q.topic === "Verbal").length, icon: "📖", color: "#EA580C" },
+                { label: "Total Questions", value: QUESTIONS.length,  color: COLORS.primary },
+                { label: "Quant", value: QUESTIONS.filter(q => q.topic === "Quant").length,  color: "#2563EB" },
+                { label: "Logical", value: QUESTIONS.filter(q => q.topic === "Logical").length, color: "#7C3AED" },
+                { label: "Verbal", value: QUESTIONS.filter(q => q.topic === "Verbal").length,  color: "#EA580C" },
               ].map(s => (
                 <div key={s.label} style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 14, padding: "16px 20px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>

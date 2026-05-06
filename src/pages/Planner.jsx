@@ -135,11 +135,11 @@ export default function Planner() {
   const completedCount = Object.values(completedDays).filter(Boolean).length;
 
   const NAV = [
-    { icon: "🏠", label: "Dashboard", path: "/dashboard" },
-    { icon: "💻", label: "DSA Practice", path: "/dsa" },
-    { icon: "🧮", label: "Aptitude", path: "/aptitude" },
-    { icon: "📅", label: "Study Planner", path: "/planner", active: true },
-    { icon: "👥", label: "Community", path: "/community" },
+    {  label: "Dashboard", path: "/dashboard" },
+    {  label: "DSA Practice", path: "/dsa" },
+    {  label: "Aptitude", path: "/aptitude" },
+    {  label: "Study Planner", path: "/planner", active: true },
+    {  label: "Community", path: "/community" },
   ];
 
   return (
@@ -148,7 +148,7 @@ export default function Planner() {
       {/* SIDEBAR */}
       <aside style={{ width: 220, background: COLORS.secondary, display: "flex", flexDirection: "column", padding: "20px 0", flexShrink: 0, position: "sticky", top: 0, height: "100vh" }}>
         <div onClick={() => navigate("/")} style={{ padding: "0 16px 24px", display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
-          <div style={{ width: 28, height: 28, background: COLORS.accent, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>⚡</div>
+          <div style={{ width: 28, height: 28, background: COLORS.accent, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}></div>
           <span style={{ fontSize: 16, fontWeight: 700, color: "#fff" }}>Prep<span style={{ color: COLORS.accent }}>Buddy</span></span>
         </div>
         {NAV.map(item => (
@@ -169,13 +169,13 @@ export default function Planner() {
         {/* HEADER */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, flexWrap: "wrap", gap: 12 }}>
           <div>
-            <h1 style={{ fontSize: 24, fontWeight: 800, color: COLORS.secondary, marginBottom: 4 }}>📅 Study Planner</h1>
+            <h1 style={{ fontSize: 24, fontWeight: 800, color: COLORS.secondary, marginBottom: 4 }}> Study Planner</h1>
             <p style={{ fontSize: 14, color: COLORS.textMuted }}>Your AI-powered personalized roadmap</p>
           </div>
           <div style={{ display: "flex", gap: 10 }}>
             <button onClick={() => setShowForm(!showForm)}
               style={{ background: COLORS.primary, border: "none", color: "#fff", padding: "10px 20px", borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: "pointer", boxShadow: `0 4px 14px ${COLORS.primary}44` }}>
-              ✨ Generate AI Plan
+               Generate AI Plan
             </button>
           </div>
         </div>
@@ -183,8 +183,8 @@ export default function Planner() {
         {/* VIEW TOGGLE */}
         <div style={{ display: "flex", gap: 4, marginBottom: 24, background: COLORS.white, borderRadius: 12, padding: 4, border: `1px solid ${COLORS.border}`, width: "fit-content" }}>
           {[
-            { key: "weekly", label: "Weekly Tasks", icon: "📋" },
-            { key: "aiplan", label: "AI Plan", icon: "🤖" },
+            { key: "weekly", label: "Weekly Tasks",  },
+            { key: "aiplan", label: "AI Plan", },
           ].map(tab => (
             <button key={tab.key} onClick={() => setView(tab.key)}
               style={{ padding: "9px 20px", borderRadius: 9, border: "none", background: view === tab.key ? COLORS.primary : "transparent", color: view === tab.key ? "#fff" : COLORS.textMuted, fontSize: 14, fontWeight: view === tab.key ? 700 : 500, cursor: "pointer", transition: "all 0.2s" }}>
@@ -196,9 +196,9 @@ export default function Planner() {
         {/* AI PLAN FORM */}
         {showForm && (
           <div style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 20, padding: "24px", marginBottom: 24 }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: COLORS.secondary, marginBottom: 20 }}>✨ Generate Your AI Study Plan</h3>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: COLORS.secondary, marginBottom: 20 }}> Generate Your AI Study Plan</h3>
 
-            {error && <div style={{ background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 10, padding: "10px 14px", marginBottom: 16, fontSize: 13, color: "#DC2626" }}>⚠️ {error}</div>}
+            {error && <div style={{ background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 10, padding: "10px 14px", marginBottom: 16, fontSize: 13, color: "#DC2626" }}> {error}</div>}
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
               <div>
@@ -244,7 +244,7 @@ export default function Planner() {
             <div style={{ display: "flex", gap: 10 }}>
               <button onClick={handleGenerate} disabled={loading}
                 style={{ flex: 1, padding: "13px", borderRadius: 12, background: loading ? COLORS.borderDark : COLORS.primary, border: "none", color: "#fff", fontSize: 15, fontWeight: 700, cursor: loading ? "not-allowed" : "pointer" }}>
-                {loading ? "🧠 Generating your plan..." : "✨ Generate Plan"}
+                {loading ? " Generating your plan..." : " Generate Plan"}
               </button>
               <button onClick={() => setShowForm(false)}
                 style={{ padding: "13px 20px", borderRadius: 12, background: "transparent", border: `1.5px solid ${COLORS.border}`, color: COLORS.secondary, fontSize: 15, fontWeight: 600, cursor: "pointer" }}>
@@ -260,10 +260,10 @@ export default function Planner() {
             {/* Stats */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 14, marginBottom: 24 }}>
               {[
-                { label: "Progress", value: `${progress}%`, icon: "📊", color: COLORS.primary },
-                { label: "Completed", value: `${completedTasks} tasks`, icon: "✅", color: "#2563EB" },
-                { label: "Remaining", value: `${totalTasks - completedTasks} tasks`, icon: "⏳", color: "#EA580C" },
-                { label: "Today's Tasks", value: tasks[0]?.tasks.length || 0, icon: "📅", color: "#7C3AED" },
+                { label: "Progress", value: `${progress}%`,  color: COLORS.primary },
+                { label: "Completed", value: `${completedTasks} tasks`, color: "#2563EB" },
+                { label: "Remaining", value: `${totalTasks - completedTasks} tasks`, color: "#EA580C" },
+                { label: "Today's Tasks", value: tasks[0]?.tasks.length || 0, color: "#7C3AED" },
               ].map(s => (
                 <div key={s.label} style={{ background: COLORS.white, border: `1px solid ${COLORS.border}`, borderRadius: 14, padding: "16px 20px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
@@ -340,12 +340,12 @@ export default function Planner() {
           <>
             {!plan ? (
               <div style={{ background: COLORS.white, border: `2px dashed ${COLORS.border}`, borderRadius: 20, padding: "60px 40px", textAlign: "center" }}>
-                <div style={{ fontSize: 48, marginBottom: 16 }}>🤖</div>
+                <div style={{ fontSize: 48, marginBottom: 16 }}></div>
                 <h3 style={{ fontSize: 20, fontWeight: 700, color: COLORS.secondary, marginBottom: 10 }}>No AI Plan Yet</h3>
                 <p style={{ fontSize: 14, color: COLORS.textMuted, marginBottom: 24 }}>Click the Generate AI Plan button above to create your personalized study roadmap.</p>
                 <button onClick={() => setShowForm(true)}
                   style={{ background: COLORS.primary, border: "none", color: "#fff", padding: "12px 28px", borderRadius: 12, fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
-                  ✨ Generate My Plan
+                   Generate My Plan
                 </button>
               </div>
             ) : (
@@ -365,7 +365,7 @@ export default function Planner() {
                     ))}
                     <button onClick={() => setShowForm(true)}
                       style={{ background: "transparent", border: `1.5px solid ${COLORS.border}`, color: COLORS.secondary, padding: "7px 16px", borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
-                      ✏️ Regenerate
+                       Regenerate
                     </button>
                   </div>
                 </div>
