@@ -2,13 +2,13 @@
 
 AI-powered DSA & Aptitude prep platform
 
-## 🚀 Tech Stack
+##  Tech Stack
 - React + Vite
 
-## 📌 About
+##  About
 PrepBuddy helps students prepare for coding interviews and aptitude using AI.
 
-## ✨ Features (you can expand later)
+##  Features
 - DSA practice
 - Aptitude questions
 - AI-based suggestions
