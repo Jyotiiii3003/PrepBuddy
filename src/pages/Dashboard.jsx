@@ -55,11 +55,11 @@ const DIFF_COLORS = {
 const STATUS_ICONS = { solved: "✅", attempted: "🔄", unsolved: "⭕" };
 
 const NAV = [
-  { icon: "🏠", label: "Dashboard", path: "/dashboard", active: true },
-  { icon: "💻", label: "DSA Practice", path: "/dsa" },
-  { icon: "🧮", label: "Aptitude", path: "/aptitude" },
-  { icon: "📅", label: "Study Planner", path: "/planner" },
-  { icon: "👥", label: "Community", path: "/community" },
+  {  label: "Dashboard", path: "/dashboard", active: true },
+  {  label: "DSA Practice", path: "/dsa" },
+  {  label: "Aptitude", path: "/aptitude" },
+  {  label: "Study Planner", path: "/planner" },
+  {  label: "Community", path: "/community" },
 ];
 
 export default function Dashboard() {
@@ -157,10 +157,10 @@ export default function Dashboard() {
         {/* STAT CARDS */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 16, marginBottom: 26 }}>
           {[
-            { label: "Readiness Score", value: `${readiness}%`, icon: "🎯", sub: "+3% this week", color: C.primary },
-            { label: "Problems Solved", value: "142", icon: "✅", sub: "8 this week", color: "#2563EB" },
-            { label: "Current Streak", value: "12 days", icon: "🔥", sub: "Best: 18 days", color: "#EA580C" },
-            { label: "Aptitude Score", value: "74%", icon: "🧮", sub: "+5% from last test", color: "#7C3AED" },
+            { label: "Readiness Score", value: `${readiness}%`, sub: "+3% this week", color: C.primary },
+            { label: "Problems Solved", value: "142", sub: "8 this week", color: "#2563EB" },
+            { label: "Current Streak", value: "12 days", sub: "Best: 18 days", color: "#EA580C" },
+            { label: "Aptitude Score", value: "74%", sub: "+5% from last test", color: "#7C3AED" },
           ].map(card => (
             <div key={card.label} style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 18, padding: "22px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
