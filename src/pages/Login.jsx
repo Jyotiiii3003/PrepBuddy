@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../utils/supabase";
+import { login } from "../utils/api";
+import { useAuth } from "../context/AuthContext";
 import { F } from "../utils/theme";
 const COLORS = {
   primary: "#16A34A",
@@ -28,20 +29,23 @@ export default function Login() {
     setError("");
   };
 
+  const { setUser } = useAuth();
+
   const handleSubmit = async () => {
-    if (!form.email || !form.password) {
-      setError("Please fill in all fields.");
-      return;
-    }
-    setLoading(true);
-    const { error: err } = await login(form.email, form.password);
-    setLoading(false);
-    if (err) {
-      setError(err.message || "Login failed. Please try again.");
-    } else {
-      navigate("/dashboard");
-    }
-  };
+  if (!form.email || !form.password) {
+    setError("Please fill in all fields.");
+    return;
+  }
+  setLoading(true);
+  try {
+    const data = await login(form.email, form.password);
+    setUser(data.user);
+    navigate("/dashboard");
+  } catch (err) {
+    setError(err.message || "Login failed. Please try again.");
+  }
+  setLoading(false);
+};
 
   return (
     <div style={{ minHeight: "100vh", background: COLORS.bg, display: "flex", fontFamily: F.body }}>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signUp } from "../utils/supabase";
+import { signup } from "../utils/api";
+import { useAuth } from "../context/AuthContext";
 
 const F = {
   display: "'Clash Display', 'Sora', sans-serif",
@@ -62,15 +63,27 @@ export default function Signup() {
     setStep(2);
   };
 
+  const { setUser } = useAuth();
+
   const handleSubmit = async () => {
-    const err = validateStep2();
-    if (err) { setError(err); return; }
-    setLoading(true);
-    const { error: signupErr } = await signUp(form.email, form.password, form.name, form.college);
-    setLoading(false);
-    if (signupErr) setError(signupErr.message || "Signup failed. Please try again.");
-    else setSuccess(true);
-  };
+  const err = validateStep2();
+  if (err) { setError(err); return; }
+  setLoading(true);
+  try {
+    const data = await signup(
+      form.name,
+      form.email,
+      form.password,
+      form.college,
+      form.target
+    );
+    setUser(data.user);
+    setSuccess(true);
+  } catch (err) {
+    setError(err.message || "Signup failed. Please try again.");
+  }
+  setLoading(false);
+};
 
   if (success) return (
     <div style={{ minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: F.body, padding: "2rem" }}>
