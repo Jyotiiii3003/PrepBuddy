@@ -45,14 +45,40 @@ const DIFF_STYLE = {
 };
 
 const STATUS_ICON = { solved:"✅", attempted:"🔄", unsolved:"⭕" };
-
+const [language, setLanguage] = useState("Python");
 const STARTER_CODE = {
-  Arrays: `def solution(nums):\n    # Your code here\n    pass`,
-  Strings: `def solution(s):\n    # Your code here\n    pass`,
-  Trees: `def solution(root):\n    # Your code here\n    pass`,
-  Graphs: `def solution(grid):\n    # Your code here\n    pass`,
-  DP: `def solution(n):\n    # Your code here\n    pass`,
-  default: `def solution():\n    # Your code here\n    pass`,
+  Python: {
+    Arrays:  `def solution(nums):\n    # Your code here\n    pass`,
+    Strings: `def solution(s):\n    # Your code here\n    pass`,
+    Trees:   `def solution(root):\n    # Your code here\n    pass`,
+    Graphs:  `def solution(grid):\n    # Your code here\n    pass`,
+    DP:      `def solution(n):\n    # Your code here\n    pass`,
+    default: `def solution():\n    # Your code here\n    pass`,
+  },
+  JavaScript: {
+    Arrays:  `function solution(nums) {\n  // Your code here\n}`,
+    Strings: `function solution(s) {\n  // Your code here\n}`,
+    Trees:   `function solution(root) {\n  // Your code here\n}`,
+    Graphs:  `function solution(grid) {\n  // Your code here\n}`,
+    DP:      `function solution(n) {\n  // Your code here\n}`,
+    default: `function solution() {\n  // Your code here\n}`,
+  },
+  Java: {
+    Arrays:  `class Solution {\n    public int[] solution(int[] nums) {\n        // Your code here\n        return new int[]{};\n    }\n}`,
+    Strings: `class Solution {\n    public String solution(String s) {\n        // Your code here\n        return "";\n    }\n}`,
+    Trees:   `class Solution {\n    public TreeNode solution(TreeNode root) {\n        // Your code here\n        return null;\n    }\n}`,
+    Graphs:  `class Solution {\n    public int solution(int[][] grid) {\n        // Your code here\n        return 0;\n    }\n}`,
+    DP:      `class Solution {\n    public int solution(int n) {\n        // Your code here\n        return 0;\n    }\n}`,
+    default: `class Solution {\n    public void solution() {\n        // Your code here\n    }\n}`,
+  },
+  "C++": {
+    Arrays:  `class Solution {\npublic:\n    vector<int> solution(vector<int>& nums) {\n        // Your code here\n        return {};\n    }\n};`,
+    Strings: `class Solution {\npublic:\n    string solution(string s) {\n        // Your code here\n        return "";\n    }\n};`,
+    Trees:   `class Solution {\npublic:\n    TreeNode* solution(TreeNode* root) {\n        // Your code here\n        return nullptr;\n    }\n};`,
+    Graphs:  `class Solution {\npublic:\n    int solution(vector<vector<int>>& grid) {\n        // Your code here\n        return 0;\n    }\n};`,
+    DP:      `class Solution {\npublic:\n    int solution(int n) {\n        // Your code here\n        return 0;\n    }\n};`,
+    default: `class Solution {\npublic:\n    void solution() {\n        // Your code here\n    }\n};`,
+  },
 };
 
 const NAV = [
@@ -85,10 +111,10 @@ export default function DSA() {
   });
 
   const openProblem = (p) => {
-    setSelectedProblem(p);
-    setCode(STARTER_CODE[p.topic] || STARTER_CODE.default);
-    setHint(""); setConfusion(""); setActiveTab("problem");
-  };
+  setSelectedProblem(p);
+  setCode(STARTER_CODE[language][p.topic] || STARTER_CODE[language].default);
+  setHint(""); setConfusion(""); setActiveTab("problem");
+};
 
   const getHint = async () => {
     if (!confusion.trim()) { setHint("Please describe what you are confused about first."); return; }
