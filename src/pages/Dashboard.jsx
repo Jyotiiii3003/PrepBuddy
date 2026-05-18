@@ -4,6 +4,8 @@ import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis,
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip
 } from "recharts";
+import { useAuth } from "../context/AuthContext";
+import { getProgressStats, logout } from "../utils/api";
 
 const F = {
   display: "'Clash Display', 'Sora', sans-serif",
@@ -63,32 +65,49 @@ const NAV = [
 ];
 
 export default function Dashboard() {
-  const navigate = useNavigate();
+  const navigate        = useNavigate();
+  const { user, logout: authLogout } = useAuth();
+  const [stats, setStats]     = useState(null);
   const [readiness, setReadiness] = useState(0);
-  const [greeting, setGreeting] = useState("");
+  const [greeting, setGreeting]   = useState("");
   const [moodSelected, setMoodSelected] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen]   = useState(true);
 
   useEffect(() => {
+    // Set greeting
     const hour = new Date().getHours();
     if (hour < 12) setGreeting("Good morning");
     else if (hour < 17) setGreeting("Good afternoon");
     else setGreeting("Good evening");
-    let count = 0;
-    const interval = setInterval(() => {
-      count += 1; setReadiness(count);
-      if (count >= 67) clearInterval(interval);
-    }, 18);
-    return () => clearInterval(interval);
+
+    // Fetch real stats from MongoDB
+    getProgressStats()
+      .then(data => {
+        setStats(data);
+        // Animate readiness score
+        const target = Math.min(Math.round((data.solved / 50) * 100), 100);
+        let count = 0;
+        const interval = setInterval(() => {
+          count += 1;
+          setReadiness(count);
+          if (count >= target) clearInterval(interval);
+        }, 18);
+      })
+      .catch(() => {
+        // Fallback to demo data if no progress yet
+        let count = 0;
+        const interval = setInterval(() => {
+          count += 1;
+          setReadiness(count);
+          if (count >= 0) clearInterval(interval);
+        }, 18);
+      });
   }, []);
 
-  const MOODS = [
-    { emoji: "😴", label: "Tired", color: "#94A3B8" },
-    { emoji: "😐", label: "Okay", color: "#F59E0B" },
-    { emoji: "😊", label: "Focused", color: C.primary },
-    { emoji: "🔥", label: "On Fire", color: "#EF4444" },
-  ];
-
+  const handleLogout = () => {
+    authLogout();
+    navigate("/");
+  };
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: C.bg, fontFamily: F.body }}>
 
@@ -119,7 +138,7 @@ export default function Dashboard() {
         ))}
 
         <div style={{ marginTop: "auto", padding: "0 8px" }}>
-          <div onClick={() => navigate("/")}
+          <div onClick={handleLogout}
             style={{ display: "flex", alignItems: "center", gap: 13, padding: "12px 20px", borderRadius: 11, cursor: "pointer" }}
             onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.07)"}
             onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
@@ -136,7 +155,7 @@ export default function Dashboard() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 30, flexWrap: "wrap", gap: 14 }}>
           <div>
             <h1 style={{ fontFamily: F.display, fontSize: "clamp(1.7rem, 2.5vw, 2.3rem)", fontWeight: 700, color: C.secondary, marginBottom: 6, letterSpacing: "-0.02em" }}>
-              {greeting}, Jyoti 👋
+              {greeting}, {user?.name?.split(' ')[0] || 'there'} 👋
             </h1>
             <p style={{ fontFamily: F.body, fontSize: 16, color: C.textMuted }}>You have 2 tasks left for today. Keep going!</p>
           </div>
@@ -157,11 +176,11 @@ export default function Dashboard() {
         {/* STAT CARDS */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 16, marginBottom: 26 }}>
           {[
-            { label: "Readiness Score", value: `${readiness}%`, sub: "+3% this week", color: C.primary },
-            { label: "Problems Solved", value: "142", sub: "8 this week", color: "#2563EB" },
-            { label: "Current Streak", value: "12 days", sub: "Best: 18 days", color: "#EA580C" },
-            { label: "Aptitude Score", value: "74%", sub: "+5% from last test", color: "#7C3AED" },
-          ].map(card => (
+  { label:"Readiness Score", value:`${readiness}%`,                    icon:"🎯", sub:"+3% this week",     color:C.primary  },
+  { label:"Problems Solved", value:stats?.solved    || 0,              icon:"✅", sub:"Keep going!",        color:"#2563EB" },
+  { label:"Current Streak",  value:`${stats?.streak || 0} days`,       icon:"🔥", sub:"Stay consistent!",   color:"#EA580C" },
+  { label:"Attempted",       value:stats?.attempted || 0,              icon:"🔄", sub:"Try to solve them",  color:"#7C3AED" },
+].map(card => (
             <div key={card.label} style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 18, padding: "22px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
                 <span style={{ fontFamily: F.ui, fontSize: 14, color: C.textMuted, fontWeight: 600 }}>{card.label}</span>
