@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { askGemini } from "../utils/gemini";
+import { saveProblemProgress } from "../utils/api";
 
 const F = {
   display: "'Clash Display', 'Sora', sans-serif",
@@ -313,7 +314,18 @@ export default function DSA() {
                 <button onClick={() => setCode(STARTER_CODE[selectedProblem.topic] || STARTER_CODE.default)}
                   style={{ fontFamily:F.ui, background:"#2D2D3D", border:"1px solid #3D3D4D", color:"#A0AEC0", padding:"7px 16px", borderRadius:9, fontSize:14, fontWeight:600, cursor:"pointer" }}>Reset</button>
                 <button style={{ fontFamily:F.ui, background:C.primary, border:"none", color:"#fff", padding:"7px 22px", borderRadius:9, fontSize:14, fontWeight:700, cursor:"pointer" }}>▶ Run</button>
-                <button style={{ fontFamily:F.ui, background:"#16A34A22", border:`1px solid ${C.primary}`, color:C.accent, padding:"7px 22px", borderRadius:9, fontSize:14, fontWeight:700, cursor:"pointer" }}>Submit</button>
+                <button
+  onClick={async () => {
+    try {
+      await saveProblemProgress(selectedProblem, 'solved');
+      alert('✅ Problem marked as solved!');
+    } catch (err) {
+      alert('Please login to save progress');
+    }
+  }}
+  style={{ fontFamily:F.ui, background:"#16A34A22", border:`1px solid ${C.primary}`, color:C.accent, padding:"7px 22px", borderRadius:9, fontSize:14, fontWeight:700, cursor:"pointer" }}>
+  Submit
+</button>
               </div>
             </div>
 
