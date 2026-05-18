@@ -5,7 +5,7 @@ import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip
 } from "recharts";
 import { useAuth } from "../context/AuthContext";
-import { getProgressStats, logout } from "../utils/api";
+import { getProgressStats } from "../utils/api";
 
 const F = {
   display: "'Clash Display', 'Sora', sans-serif",
@@ -17,7 +17,7 @@ const F = {
 const C = {
   primary: "#16A34A", secondary: "#14532D", accent: "#4ADE80",
   bg: "#F0FDF4", bgCard: "#DCFCE7", text: "#052E16",
-  textMuted: "#166534", border: "#BBF7D0", borderDark: "#86EFAC", white: "#FFFFFF",
+  textMuted: "#166634", border: "#BBF7D0", borderDark: "#86EFAC", white: "#FFFFFF",
 };
 
 const RADAR_DATA = [
@@ -57,34 +57,39 @@ const DIFF_COLORS = {
 const STATUS_ICONS = { solved: "✅", attempted: "🔄", unsolved: "⭕" };
 
 const NAV = [
-  {  label: "Dashboard", path: "/dashboard", active: true },
-  {  label: "DSA Practice", path: "/dsa" },
-  {  label: "Aptitude", path: "/aptitude" },
-  {  label: "Study Planner", path: "/planner" },
-  {  label: "Community", path: "/community" },
+  { icon: "🏠", label: "Dashboard", path: "/dashboard", active: true },
+  { icon: "💻", label: "DSA Practice", path: "/dsa" },
+  { icon: "🧮", label: "Aptitude", path: "/aptitude" },
+  { icon: "📅", label: "Study Planner", path: "/planner" },
+  { icon: "👥", label: "Community", path: "/community" },
+];
+
+// ── MOODS defined at module level ─────────────────────────
+const MOODS = [
+  { emoji: "😴", label: "Tired",   color: "#94A3B8" },
+  { emoji: "😐", label: "Okay",    color: "#F59E0B" },
+  { emoji: "😊", label: "Focused", color: C.primary  },
+  { emoji: "🔥", label: "On Fire", color: "#EF4444"  },
 ];
 
 export default function Dashboard() {
-  const navigate        = useNavigate();
+  const navigate = useNavigate();
   const { user, logout: authLogout } = useAuth();
-  const [stats, setStats]     = useState(null);
-  const [readiness, setReadiness] = useState(0);
-  const [greeting, setGreeting]   = useState("");
+  const [stats, setStats]               = useState(null);
+  const [readiness, setReadiness]       = useState(0);
+  const [greeting, setGreeting]         = useState("");
   const [moodSelected, setMoodSelected] = useState(null);
   const [sidebarOpen, setSidebarOpen]   = useState(true);
 
   useEffect(() => {
-    // Set greeting
     const hour = new Date().getHours();
     if (hour < 12) setGreeting("Good morning");
     else if (hour < 17) setGreeting("Good afternoon");
     else setGreeting("Good evening");
 
-    // Fetch real stats from MongoDB
     getProgressStats()
       .then(data => {
         setStats(data);
-        // Animate readiness score
         const target = Math.min(Math.round((data.solved / 50) * 100), 100);
         let count = 0;
         const interval = setInterval(() => {
@@ -94,13 +99,8 @@ export default function Dashboard() {
         }, 18);
       })
       .catch(() => {
-        // Fallback to demo data if no progress yet
-        let count = 0;
-        const interval = setInterval(() => {
-          count += 1;
-          setReadiness(count);
-          if (count >= 0) clearInterval(interval);
-        }, 18);
+        // No progress yet — keep readiness at 0
+        setReadiness(0);
       });
   }, []);
 
@@ -108,6 +108,7 @@ export default function Dashboard() {
     authLogout();
     navigate("/");
   };
+
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: C.bg, fontFamily: F.body }}>
 
@@ -157,9 +158,12 @@ export default function Dashboard() {
             <h1 style={{ fontFamily: F.display, fontSize: "clamp(1.7rem, 2.5vw, 2.3rem)", fontWeight: 700, color: C.secondary, marginBottom: 6, letterSpacing: "-0.02em" }}>
               {greeting}, {user?.name?.split(' ')[0] || 'there'} 👋
             </h1>
-            <p style={{ fontFamily: F.body, fontSize: 16, color: C.textMuted }}>You have 2 tasks left for today. Keep going!</p>
+            <p style={{ fontFamily: F.body, fontSize: 16, color: C.textMuted }}>
+              You have {TODAY_PLAN.filter(t => !t.done).length} tasks left for today. Keep going!
+            </p>
           </div>
 
+          {/* Mood check-in */}
           <div style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 14, padding: "12px 18px", display: "flex", alignItems: "center", gap: 14 }}>
             <span style={{ fontFamily: F.ui, fontSize: 14, fontWeight: 700, color: C.secondary }}>Today's mood:</span>
             <div style={{ display: "flex", gap: 6 }}>
@@ -176,11 +180,11 @@ export default function Dashboard() {
         {/* STAT CARDS */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 16, marginBottom: 26 }}>
           {[
-  { label:"Readiness Score", value:`${readiness}%`,                    icon:"🎯", sub:"+3% this week",     color:C.primary  },
-  { label:"Problems Solved", value:stats?.solved    || 0,              icon:"✅", sub:"Keep going!",        color:"#2563EB" },
-  { label:"Current Streak",  value:`${stats?.streak || 0} days`,       icon:"🔥", sub:"Stay consistent!",   color:"#EA580C" },
-  { label:"Attempted",       value:stats?.attempted || 0,              icon:"🔄", sub:"Try to solve them",  color:"#7C3AED" },
-].map(card => (
+            { label: "Readiness Score", value: `${readiness}%`,             icon: "🎯", sub: "+3% this week",    color: C.primary  },
+            { label: "Problems Solved", value: stats?.solved    || 0,        icon: "✅", sub: "Keep going!",       color: "#2563EB" },
+            { label: "Current Streak",  value: `${stats?.streak || 0} days`, icon: "🔥", sub: "Stay consistent!",  color: "#EA580C" },
+            { label: "Attempted",       value: stats?.attempted || 0,        icon: "🔄", sub: "Try to solve them", color: "#7C3AED" },
+          ].map(card => (
             <div key={card.label} style={{ background: C.white, border: `1px solid ${C.border}`, borderRadius: 18, padding: "22px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
                 <span style={{ fontFamily: F.ui, fontSize: 14, color: C.textMuted, fontWeight: 600 }}>{card.label}</span>
@@ -236,7 +240,9 @@ export default function Dashboard() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 22 }}>
               <div>
                 <h3 style={{ fontFamily: F.body, fontSize: 18, fontWeight: 700, color: C.secondary, margin: 0 }}>Today's Plan</h3>
-                <p style={{ fontFamily: F.body, fontSize: 14, color: C.textMuted, marginTop: 4 }}>2 of 4 completed</p>
+                <p style={{ fontFamily: F.body, fontSize: 14, color: C.textMuted, marginTop: 4 }}>
+                  {TODAY_PLAN.filter(t => t.done).length} of {TODAY_PLAN.length} completed
+                </p>
               </div>
               <button onClick={() => navigate("/planner")}
                 style={{ fontFamily: F.ui, fontSize: 13, fontWeight: 700, color: C.primary, background: C.bgCard, border: "none", padding: "7px 14px", borderRadius: 9, cursor: "pointer" }}>
@@ -296,12 +302,16 @@ export default function Dashboard() {
             <div style={{ width: 48, height: 48, background: "rgba(74,222,128,0.15)", borderRadius: 13, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, flexShrink: 0 }}>🧠</div>
             <div>
               <div style={{ fontFamily: F.body, fontSize: 16, fontWeight: 700, color: "#fff", marginBottom: 5 }}>AI Suggestion for you</div>
-              <div style={{ fontFamily: F.body, fontSize: 15, color: "#86EFAC" }}>Your DP score is 40% — lower than your target. Solve 3 DP problems today to close the gap.</div>
+              <div style={{ fontFamily: F.body, fontSize: 15, color: "#86EFAC" }}>
+                {stats?.solved > 0
+                  ? `You have solved ${stats.solved} problems. Keep pushing — target 50 to boost your readiness score!`
+                  : "Start solving DSA problems to get personalized AI suggestions based on your weak topics."}
+              </div>
             </div>
           </div>
           <button onClick={() => navigate("/dsa")}
             style={{ fontFamily: F.ui, background: C.accent, border: "none", color: C.secondary, padding: "11px 24px", borderRadius: 11, fontSize: 15, fontWeight: 800, cursor: "pointer", flexShrink: 0 }}>
-            Practice DP →
+            Practice Now →
           </button>
         </div>
 

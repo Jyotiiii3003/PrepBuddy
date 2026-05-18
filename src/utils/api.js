@@ -35,6 +35,8 @@ export async function signup(name, email, password, college, targetCompany) {
 }
 
 export async function login(email, password) {
+  clearToken()        
+  clearStoredUser()   
   const data = await api('/auth/login', {
     method: 'POST',
     body: JSON.stringify({ email, password }),
@@ -43,6 +45,7 @@ export async function login(email, password) {
   setStoredUser(data.user)
   return data
 }
+
 
 export async function logout() {
   clearToken()
