@@ -45,7 +45,7 @@ const DIFF_STYLE = {
 };
 
 const STATUS_ICON = { solved:"✅", attempted:"🔄", unsolved:"⭕" };
-const [language, setLanguage] = useState("Python");
+
 const STARTER_CODE = {
   Python: {
     Arrays:  `def solution(nums):\n    # Your code here\n    pass`,
@@ -101,7 +101,7 @@ export default function DSA() {
   const [hintLoading, setHintLoading] = useState(false);
   const [confusion, setConfusion] = useState("");
   const [activeTab, setActiveTab] = useState("problem");
-
+  const [language, setLanguage] = useState("Python");
   const filtered = PROBLEMS.filter(p => {
     const matchTopic = selectedTopic === "All" || p.topic === selectedTopic;
     const matchDiff = selectedDiff === "All" || p.difficulty === selectedDiff;
