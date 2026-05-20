@@ -332,12 +332,21 @@ export default function DSA() {
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"13px 22px", borderBottom:"1px solid #2D2D3D" }}>
               <div style={{ display:"flex", gap:10, alignItems:"center" }}>
                 <span style={{ fontFamily:F.ui, fontSize:14, color:"#A0AEC0", fontWeight:600 }}>Language:</span>
-                <select style={{ background:"#2D2D3D", color:"#E2E8F0", border:"1px solid #3D3D4D", padding:"5px 12px", borderRadius:7, fontFamily:F.ui, fontSize:14, fontWeight:600, cursor:"pointer" }}>
-                  <option>Python</option><option>JavaScript</option><option>Java</option><option>C++</option>
-                </select>
+                <select
+  value={language}
+  onChange={e => {
+    setLanguage(e.target.value);
+    setCode(STARTER_CODE[e.target.value][selectedProblem.topic] || STARTER_CODE[e.target.value].default);
+  }}
+  style={{ background:"#2D2D3D", color:"#E2E8F0", border:"1px solid #3D3D4D", padding:"5px 12px", borderRadius:7, fontFamily:F.ui, fontSize:14, fontWeight:600, cursor:"pointer" }}>
+  <option>Python</option>
+  <option>JavaScript</option>
+  <option>Java</option>
+  <option>C++</option>
+</select>
               </div>
               <div style={{ display:"flex", gap:9 }}>
-                <button onClick={() => setCode(STARTER_CODE[selectedProblem.topic] || STARTER_CODE.default)}
+                <button onClick={() => setCode(STARTER_CODE[language][selectedProblem.topic] || STARTER_CODE[language].default)}
                   style={{ fontFamily:F.ui, background:"#2D2D3D", border:"1px solid #3D3D4D", color:"#A0AEC0", padding:"7px 16px", borderRadius:9, fontSize:14, fontWeight:600, cursor:"pointer" }}>Reset</button>
                 <button style={{ fontFamily:F.ui, background:C.primary, border:"none", color:"#fff", padding:"7px 22px", borderRadius:9, fontSize:14, fontWeight:700, cursor:"pointer" }}>▶ Run</button>
                 <button
