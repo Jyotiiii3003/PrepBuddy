@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { askGemini } from "../utils/gemini";
 import { saveProblemProgress } from "../utils/api";
-
+import { getDSAHint } from "../utils/gemini";
 const F = {
   display: "'Clash Display', 'Sora', sans-serif",
   body: "'Sora', 'Segoe UI', sans-serif",
@@ -117,20 +117,16 @@ export default function DSA() {
 };
 
   const getHint = async () => {
-    if (!confusion.trim()) { setHint("Please describe what you are confused about first."); return; }
-    setHintLoading(true); setHint("");
-    try {
-      const result = await askGemini(`
-        You are a helpful DSA tutor. Student is solving: "${selectedProblem.title}" (${selectedProblem.topic}, ${selectedProblem.difficulty}).
-        Their confusion: "${confusion}"
-        Their current code: ${code}
-        Give ONE Socratic guiding question. Do NOT give the answer directly.
-        Keep it under 3 sentences. Be encouraging and friendly.
-      `);
-      setHint(result);
-    } catch { setHint("Could not get hint. Please check your Gemini API key in the .env file."); }
-    setHintLoading(false);
-  };
+  if (!confusion.trim()) { setHint("Please describe what you are confused about first."); return; }
+  setHintLoading(true); setHint("");
+  try {
+    const hint = await getDSAHint(selectedProblem.title, confusion, code);
+    setHint(hint);
+  } catch (err) {
+    setHint(err.message || "Could not get hint. Please try again.");
+  }
+  setHintLoading(false);
+};
 
   const solved = PROBLEMS.filter(p => p.status === "solved").length;
   const attempted = PROBLEMS.filter(p => p.status === "attempted").length;

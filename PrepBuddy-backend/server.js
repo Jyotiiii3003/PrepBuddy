@@ -13,6 +13,7 @@ app.use('/api/progress', require('./routes/progress'))
 app.use('/api/user',     require('./routes/user'))
 
 app.get('/', (req, res) => res.json({ message: 'PrepBuddy API is running!' }))
+app.use('/api/ai', require('./routes/ai'))
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {

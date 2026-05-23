@@ -1,37 +1,32 @@
-const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`
+import { getToken } from './api'
 
-export async function askGemini(prompt) {
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }]
-    })
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+
+async function callBackend(endpoint, body) {
+  const res = await fetch(`${BASE_URL}${endpoint}`, {
+    method:  'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization:  `Bearer ${getToken()}`,
+    },
+    body: JSON.stringify(body),
   })
   const data = await res.json()
-  return data.candidates[0].content.parts[0].text
+  if (!res.ok) throw new Error(data.error || 'AI request failed')
+  return data
 }
 
-export async function getDSAHint(problemName, userCode, confusion) {
-  const prompt = `
-    You are a helpful DSA tutor. Student is solving: "${problemName}".
-    Their code: ${userCode}
-    Their confusion: ${confusion}
-    Give ONE Socratic guiding question only. Max 2 sentences. No direct answer.
-  `
-  return await askGemini(prompt)
+export async function askGemini(prompt, problemName = '', confusion = '', code = '') {
+  const data = await callBackend('/ai/hint', { problemName, confusion, code, prompt })
+  return data.hint
+}
+
+export async function getDSAHint(problemName, confusion, code) {
+  const data = await callBackend('/ai/hint', { problemName, confusion, code })
+  return data.hint
 }
 
 export async function generateStudyPlan(company, examDate, dailyHours, weakTopics) {
-  const prompt = `
-    Create a week-by-week DSA + Aptitude study plan.
-    Target: ${company}, Exam date: ${examDate}, Daily hours: ${dailyHours}
-    Weak topics: ${weakTopics}
-    Return ONLY a JSON array like:
-    [{ "day": "Day 1", "topic": "Arrays", "problems": 3, "aptitude": "Number Series" }]
-    No explanation, no markdown, just raw JSON array.
-  `
-  const raw = await askGemini(prompt)
-  return JSON.parse(raw.replace(/```json|```/g, '').trim())
+  const data = await callBackend('/ai/study-plan', { company, examDate, dailyHours, weakTopics })
+  return data.plan
 }
