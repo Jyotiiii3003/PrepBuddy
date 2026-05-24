@@ -1,34 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { getLeaderboard } from "../utils/api";
+import { useAuth } from "../context/AuthContext";
 
 const F = {
   display: "'Clash Display', 'Sora', sans-serif",
-  body: "'Sora', 'Segoe UI', sans-serif",
-  ui: "'Nunito', 'Sora', sans-serif",
-  mono: "'JetBrains Mono', monospace",
+  body:    "'Sora', 'Segoe UI', sans-serif",
+  ui:      "'Nunito', 'Sora', sans-serif",
+  mono:    "'JetBrains Mono', monospace",
 };
 
 const C = {
-  primary: "#16A34A", secondary: "#14532D", accent: "#4ADE80",
-  bg: "#F0FDF4", bgCard: "#DCFCE7", text: "#052E16",
-  textMuted: "#166534", border: "#BBF7D0", borderDark: "#86EFAC", white: "#FFFFFF",
+  primary:   "#16A34A", secondary: "#14532D", accent: "#4ADE80",
+  bg:        "#F0FDF4", bgCard:    "#DCFCE7", text:   "#052E16",
+  textMuted: "#166534", border:   "#BBF7D0", borderDark: "#86EFAC", white: "#FFFFFF",
 };
 
-const LEADERBOARD = [
+// Fallback leaderboard shown before real data loads
+const FALLBACK_LEADERBOARD = [
   { rank:1, name:"Rahul Singh",  college:"NIT Trichy",   score:980, streak:24, avatar:"RS", solved:142 },
   { rank:2, name:"Priya Sharma", college:"VIT Vellore",  score:920, streak:18, avatar:"PS", solved:128 },
   { rank:3, name:"Aman Gupta",   college:"BITS Pilani",  score:875, streak:15, avatar:"AG", solved:115 },
   { rank:4, name:"Sneha Patel",  college:"SRM Chennai",  score:820, streak:12, avatar:"SP", solved:104 },
-  { rank:5, name:"You",          college:"Your College", score:800, streak:12, avatar:"ME", solved:98,  isYou:true },
-  { rank:6, name:"Kiran Rao",    college:"Amity Univ.",  score:770, streak:9,  avatar:"KR", solved:91  },
-  { rank:7, name:"Divya Nair",   college:"LPU",          score:740, streak:7,  avatar:"DN", solved:85  },
+  { rank:5, name:"You",          college:"Your College", score:800, streak:12, avatar:"ME", solved:98, isYou:true },
+  { rank:6, name:"Kiran Rao",    college:"Amity Univ.",  score:770, streak:9,  avatar:"KR", solved:91 },
+  { rank:7, name:"Divya Nair",   college:"LPU",          score:740, streak:7,  avatar:"DN", solved:85 },
 ];
 
 const ROOMS = [
-  { name:"DSA Grind",    topic:"Arrays & Strings",      users:12, active:true  },
-  { name:"Aptitude Zone",topic:"Quant Practice",        users:7,  active:true  },
-  { name:"Mock Battle",  topic:"Timed Mock Test",       users:5,  active:false },
-  { name:"DP Deep Dive", topic:"Dynamic Programming",   users:3,  active:false },
+  { name:"DSA Grind",    topic:"Arrays & Strings",    users:12, active:true  },
+  { name:"Aptitude Zone",topic:"Quant Practice",      users:7,  active:true  },
+  { name:"Mock Battle",  topic:"Timed Mock Test",     users:5,  active:false },
+  { name:"DP Deep Dive", topic:"Dynamic Programming", users:3,  active:false },
 ];
 
 const INITIAL_FEED = [
@@ -39,9 +42,9 @@ const INITIAL_FEED = [
 ];
 
 const POST_TYPES = [
-  { key:"question",    label:"Ask a Question",   icon:"❓", color:"#FEF9C3", textColor:"#854D0E" },
-  { key:"tip",         label:"Share a Tip",      icon:"💡", color:C.bgCard,  textColor:C.primary },
-  { key:"achievement", label:"Achievement",      icon:"🏆", color:"#EDE9FE", textColor:"#6D28D9" },
+  { key:"question",    label:"Ask a Question", icon:"❓", color:"#FEF9C3", textColor:"#854D0E" },
+  { key:"tip",         label:"Share a Tip",    icon:"💡", color:C.bgCard,  textColor:C.primary },
+  { key:"achievement", label:"Achievement",    icon:"🏆", color:"#EDE9FE", textColor:"#6D28D9" },
 ];
 
 const RANK_MEDALS = { 1:"🥇", 2:"🥈", 3:"🥉" };
@@ -56,22 +59,59 @@ const NAV = [
 
 export default function Community() {
   const navigate = useNavigate();
-  const [feed, setFeed]               = useState(INITIAL_FEED);
-  const [input, setInput]             = useState("");
-  const [postType, setPostType]       = useState("question");
-  const [likedPosts, setLikedPosts]   = useState({});
-  const [activeTab, setActiveTab]     = useState("feed");
-  const [joinedRooms, setJoinedRooms] = useState({});
+  const { user } = useAuth();
+
+  const [feed,              setFeed]              = useState(INITIAL_FEED);
+  const [input,             setInput]             = useState("");
+  const [postType,          setPostType]          = useState("question");
+  const [likedPosts,        setLikedPosts]        = useState({});
+  const [activeTab,         setActiveTab]         = useState("feed");
+  const [joinedRooms,       setJoinedRooms]       = useState({});
+  const [leaderboard,       setLeaderboard]       = useState(FALLBACK_LEADERBOARD);
+  const [leaderboardLoading,setLeaderboardLoading]= useState(true);
+
+  useEffect(() => {
+    getLeaderboard()
+      .then(data => {
+        if (data.leaderboard && data.leaderboard.length > 0) {
+          // Format real leaderboard data
+          const formatted = data.leaderboard.map((u, i) => ({
+            rank:    i + 1,
+            name:    u.name    || "Anonymous",
+            college: u.college || "Unknown College",
+            solved:  u.solved  || 0,
+            score:   (u.solved || 0) * 10,
+            streak:  0,
+            avatar:  (u.name || "??").split(" ").map(n => n[0]).join("").slice(0,2).toUpperCase(),
+            isYou:   u.isYou || false,
+          }));
+          setLeaderboard(formatted);
+        }
+      })
+      .catch(() => setLeaderboard(FALLBACK_LEADERBOARD))
+      .finally(() => setLeaderboardLoading(false));
+  }, []);
 
   const post = () => {
     if (!input.trim()) return;
-    setFeed([{ id:Date.now(), user:"You", avatar:"ME", type:postType, text:input, time:"Just now", likes:0, college:"Your College" }, ...feed]);
+    setFeed([{
+      id:      Date.now(),
+      user:    user?.name || "You",
+      avatar:  (user?.name || "YO").split(" ").map(n=>n[0]).join("").slice(0,2).toUpperCase(),
+      type:    postType,
+      text:    input,
+      time:    "Just now",
+      likes:   0,
+      college: user?.college || "Your College",
+    }, ...feed]);
     setInput("");
   };
 
   const toggleLike = (id) => {
     setLikedPosts(prev => ({ ...prev, [id]:!prev[id] }));
-    setFeed(prev => prev.map(p => p.id===id ? { ...p, likes:likedPosts[id]?p.likes-1:p.likes+1 } : p));
+    setFeed(prev => prev.map(p =>
+      p.id===id ? { ...p, likes:likedPosts[id] ? p.likes-1 : p.likes+1 } : p
+    ));
   };
 
   return (
@@ -109,9 +149,9 @@ export default function Community() {
         {/* TABS */}
         <div style={{ display:"flex", gap:4, marginBottom:26, background:C.white, borderRadius:13, padding:4, border:`1px solid ${C.border}`, width:"fit-content" }}>
           {[
-            { key:"feed",        label:"Live Feed",      icon:"📣" },
-            { key:"leaderboard", label:"Leaderboard",    icon:"🏆" },
-            { key:"rooms",       label:"Study Rooms",    icon:"🚪" },
+            { key:"feed",        label:"Live Feed",   icon:"📣" },
+            { key:"leaderboard", label:"Leaderboard", icon:"🏆" },
+            { key:"rooms",       label:"Study Rooms", icon:"🚪" },
           ].map(tab => (
             <button key={tab.key} onClick={() => setActiveTab(tab.key)}
               style={{ padding:"10px 22px", borderRadius:10, border:"none", background:activeTab===tab.key?C.primary:"transparent", color:activeTab===tab.key?"#fff":C.textMuted, fontFamily:F.ui, fontSize:15, fontWeight:activeTab===tab.key?800:600, cursor:"pointer", transition:"all 0.2s" }}>
@@ -123,8 +163,6 @@ export default function Community() {
         {/* ── LIVE FEED ── */}
         {activeTab === "feed" && (
           <div style={{ display:"grid", gridTemplateColumns:"1fr 300px", gap:22 }}>
-
-            {/* Feed column */}
             <div>
               {/* Composer */}
               <div style={{ background:C.white, border:`1px solid ${C.border}`, borderRadius:20, padding:"22px", marginBottom:20 }}>
@@ -138,7 +176,8 @@ export default function Community() {
                 </div>
                 <textarea value={input} onChange={e => setInput(e.target.value)}
                   placeholder={postType==="question"?"What are you stuck on? Ask the community...":postType==="tip"?"Share a helpful tip or trick...":"Share your achievement! 🎉"}
-                  onFocus={e => e.target.style.borderColor=C.primary} onBlur={e => e.target.style.borderColor=C.border}
+                  onFocus={e => e.target.style.borderColor=C.primary}
+                  onBlur={e => e.target.style.borderColor=C.border}
                   style={{ width:"100%", height:90, padding:"13px", borderRadius:13, border:`1.5px solid ${C.border}`, fontFamily:F.body, fontSize:15, color:C.text, resize:"none", outline:"none", boxSizing:"border-box", lineHeight:1.65 }} />
                 <div style={{ display:"flex", justifyContent:"flex-end", marginTop:12 }}>
                   <button onClick={post}
@@ -148,7 +187,7 @@ export default function Community() {
                 </div>
               </div>
 
-              {/* Posts */}
+              {/* Feed posts */}
               <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
                 {feed.map(item => {
                   const ts = POST_TYPES.find(p=>p.key===item.type) || POST_TYPES[0];
@@ -184,16 +223,17 @@ export default function Community() {
 
             {/* Right sidebar */}
             <div>
-              {/* Mini leaderboard */}
               <div style={{ background:C.white, border:`1px solid ${C.border}`, borderRadius:20, padding:"22px", marginBottom:16 }}>
                 <h3 style={{ fontFamily:F.body, fontSize:17, fontWeight:700, color:C.secondary, marginBottom:18 }}>🏆 Top This Week</h3>
-                {LEADERBOARD.slice(0,5).map(u => (
+                {leaderboardLoading ? (
+                  <p style={{ fontFamily:F.body, fontSize:14, color:C.textMuted }}>Loading leaderboard...</p>
+                ) : leaderboard.slice(0,5).map(u => (
                   <div key={u.rank} style={{ display:"flex", alignItems:"center", gap:10, padding:"10px 0", borderBottom:u.rank<5?`1px solid ${C.border}`:"none" }}>
                     <span style={{ fontSize:16, width:26, textAlign:"center" }}>{RANK_MEDALS[u.rank]||`#${u.rank}`}</span>
                     <div style={{ width:30, height:30, borderRadius:"50%", background:u.isYou?C.primary:C.secondary, display:"flex", alignItems:"center", justifyContent:"center", fontFamily:F.mono, fontSize:11, fontWeight:600, color:u.isYou?"#fff":C.accent, flexShrink:0 }}>{u.avatar}</div>
                     <div style={{ flex:1 }}>
                       <div style={{ fontFamily:F.body, fontSize:14, fontWeight:u.isYou?700:500, color:u.isYou?C.primary:C.secondary }}>{u.name}</div>
-                      <div style={{ fontFamily:F.mono, fontSize:12, color:C.textMuted }}>{u.score} pts</div>
+                      <div style={{ fontFamily:F.mono, fontSize:12, color:C.textMuted }}>{u.solved} solved</div>
                     </div>
                   </div>
                 ))}
@@ -203,7 +243,6 @@ export default function Community() {
                 </button>
               </div>
 
-              {/* Active rooms mini */}
               <div style={{ background:C.white, border:`1px solid ${C.border}`, borderRadius:20, padding:"22px" }}>
                 <h3 style={{ fontFamily:F.body, fontSize:17, fontWeight:700, color:C.secondary, marginBottom:18 }}>🚪 Active Rooms</h3>
                 {ROOMS.filter(r=>r.active).map(r => (
@@ -227,48 +266,63 @@ export default function Community() {
         {/* ── LEADERBOARD ── */}
         {activeTab === "leaderboard" && (
           <div>
-            {/* Podium */}
-            <div style={{ display:"flex", justifyContent:"center", alignItems:"flex-end", gap:16, marginBottom:36 }}>
-              {[LEADERBOARD[1], LEADERBOARD[0], LEADERBOARD[2]].map((u, i) => {
-                const heights = [190, 230, 165];
-                const isFirst = i===1;
-                return (
-                  <div key={u.rank} style={{ textAlign:"center", width:148 }}>
-                    <div style={{ fontSize:30, marginBottom:8 }}>{RANK_MEDALS[u.rank]}</div>
-                    <div style={{ width:54, height:54, borderRadius:"50%", background:isFirst?C.primary:C.secondary, display:"flex", alignItems:"center", justifyContent:"center", fontFamily:F.mono, fontSize:16, fontWeight:600, color:isFirst?"#fff":C.accent, margin:"0 auto 10px" }}>{u.avatar}</div>
-                    <div style={{ fontFamily:F.body, fontSize:14, fontWeight:700, color:C.secondary }}>{u.name}</div>
-                    <div style={{ fontFamily:F.ui, fontSize:12, color:C.textMuted, marginBottom:10, fontWeight:500 }}>{u.college}</div>
-                    <div style={{ height:heights[i], background:isFirst?C.primary:C.bgCard, borderRadius:"13px 13px 0 0", border:`1px solid ${C.border}`, display:"flex", alignItems:"center", justifyContent:"center", fontFamily:F.mono, fontSize:18, fontWeight:600, color:isFirst?"#fff":C.primary }}>
-                      {u.score}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Full table */}
-            <div style={{ background:C.white, border:`1px solid ${C.border}`, borderRadius:20, overflow:"hidden" }}>
-              <div style={{ display:"grid", gridTemplateColumns:"54px 1fr 170px 90px 110px 100px", padding:"13px 22px", background:C.bgCard, borderBottom:`1px solid ${C.border}` }}>
-                {["Rank","Student","College","Solved","Streak","Score"].map(h => (
-                  <span key={h} style={{ fontFamily:F.ui, fontSize:12, fontWeight:700, color:C.textMuted, textTransform:"uppercase", letterSpacing:"0.07em" }}>{h}</span>
-                ))}
+            {leaderboardLoading ? (
+              <div style={{ textAlign:"center", padding:"60px", fontFamily:F.body, fontSize:16, color:C.textMuted }}>
+                Loading real leaderboard data...
               </div>
-              {LEADERBOARD.map((u, i) => (
-                <div key={u.rank} style={{ display:"grid", gridTemplateColumns:"54px 1fr 170px 90px 110px 100px", padding:"15px 22px", borderBottom:i<LEADERBOARD.length-1?`1px solid ${C.border}`:"none", background:u.isYou?C.bgCard:"transparent", alignItems:"center" }}>
-                  <span style={{ fontSize:18 }}>{RANK_MEDALS[u.rank]||`#${u.rank}`}</span>
-                  <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-                    <div style={{ width:34, height:34, borderRadius:"50%", background:u.isYou?C.primary:C.secondary, display:"flex", alignItems:"center", justifyContent:"center", fontFamily:F.mono, fontSize:12, fontWeight:600, color:u.isYou?"#fff":C.accent, flexShrink:0 }}>{u.avatar}</div>
-                    <div style={{ fontFamily:F.body, fontSize:15, fontWeight:u.isYou?700:500, color:u.isYou?C.primary:C.secondary }}>
-                      {u.name} {u.isYou?"(You)":""}
-                    </div>
+            ) : (
+              <>
+                {/* Podium — top 3 */}
+                {leaderboard.length >= 3 && (
+                  <div style={{ display:"flex", justifyContent:"center", alignItems:"flex-end", gap:16, marginBottom:36 }}>
+                    {[leaderboard[1], leaderboard[0], leaderboard[2]].map((u, i) => {
+                      const heights = [190, 230, 165];
+                      const isFirst = i===1;
+                      return (
+                        <div key={u.rank} style={{ textAlign:"center", width:148 }}>
+                          <div style={{ fontSize:30, marginBottom:8 }}>{RANK_MEDALS[u.rank]}</div>
+                          <div style={{ width:54, height:54, borderRadius:"50%", background:isFirst?C.primary:C.secondary, display:"flex", alignItems:"center", justifyContent:"center", fontFamily:F.mono, fontSize:16, fontWeight:600, color:isFirst?"#fff":C.accent, margin:"0 auto 10px" }}>{u.avatar}</div>
+                          <div style={{ fontFamily:F.body, fontSize:14, fontWeight:700, color:C.secondary }}>{u.name}</div>
+                          <div style={{ fontFamily:F.ui, fontSize:12, color:C.textMuted, marginBottom:10, fontWeight:500 }}>{u.college}</div>
+                          <div style={{ height:heights[i], background:isFirst?C.primary:C.bgCard, borderRadius:"13px 13px 0 0", border:`1px solid ${C.border}`, display:"flex", alignItems:"center", justifyContent:"center", fontFamily:F.mono, fontSize:18, fontWeight:600, color:isFirst?"#fff":C.primary }}>
+                            {u.solved}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                  <span style={{ fontFamily:F.ui, fontSize:13, color:C.textMuted, fontWeight:500 }}>{u.college}</span>
-                  <span style={{ fontFamily:F.mono, fontSize:14, fontWeight:600, color:C.secondary }}>{u.solved}</span>
-                  <span style={{ fontFamily:F.ui, fontSize:14, color:"#EA580C", fontWeight:700 }}>🔥 {u.streak}d</span>
-                  <span style={{ fontFamily:F.mono, fontSize:16, fontWeight:600, color:C.primary }}>{u.score}</span>
+                )}
+
+                {/* Full table */}
+                <div style={{ background:C.white, border:`1px solid ${C.border}`, borderRadius:20, overflow:"hidden" }}>
+                  <div style={{ display:"grid", gridTemplateColumns:"54px 1fr 200px 100px 100px", padding:"13px 22px", background:C.bgCard, borderBottom:`1px solid ${C.border}` }}>
+                    {["Rank","Student","College","Solved","Score"].map(h => (
+                      <span key={h} style={{ fontFamily:F.ui, fontSize:12, fontWeight:700, color:C.textMuted, textTransform:"uppercase", letterSpacing:"0.07em" }}>{h}</span>
+                    ))}
+                  </div>
+                  {leaderboard.map((u, i) => (
+                    <div key={u.rank} style={{ display:"grid", gridTemplateColumns:"54px 1fr 200px 100px 100px", padding:"15px 22px", borderBottom:i<leaderboard.length-1?`1px solid ${C.border}`:"none", background:u.isYou?C.bgCard:"transparent", alignItems:"center" }}>
+                      <span style={{ fontSize:18 }}>{RANK_MEDALS[u.rank]||`#${u.rank}`}</span>
+                      <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+                        <div style={{ width:34, height:34, borderRadius:"50%", background:u.isYou?C.primary:C.secondary, display:"flex", alignItems:"center", justifyContent:"center", fontFamily:F.mono, fontSize:12, fontWeight:600, color:u.isYou?"#fff":C.accent, flexShrink:0 }}>{u.avatar}</div>
+                        <div style={{ fontFamily:F.body, fontSize:15, fontWeight:u.isYou?700:500, color:u.isYou?C.primary:C.secondary }}>
+                          {u.name} {u.isYou?"(You)":""}
+                        </div>
+                      </div>
+                      <span style={{ fontFamily:F.ui, fontSize:13, color:C.textMuted, fontWeight:500 }}>{u.college}</span>
+                      <span style={{ fontFamily:F.mono, fontSize:14, fontWeight:600, color:C.secondary }}>{u.solved}</span>
+                      <span style={{ fontFamily:F.mono, fontSize:16, fontWeight:600, color:C.primary }}>{u.score}</span>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+
+                {leaderboard.length === 0 && (
+                  <div style={{ textAlign:"center", padding:"60px", fontFamily:F.body, fontSize:16, color:C.textMuted }}>
+                    No data yet — start solving problems to appear on the leaderboard! 🚀
+                  </div>
+                )}
+              </>
+            )}
           </div>
         )}
 
@@ -305,8 +359,9 @@ export default function Community() {
                 </div>
               ))}
 
-              {/* Create room */}
-              <div style={{ background:"transparent", border:`2px dashed ${C.border}`, borderRadius:22, padding:"26px", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", cursor:"pointer", minHeight:220, transition:"all 0.2s" }}
+              {/* Create room card */}
+              <div
+                style={{ background:"transparent", border:`2px dashed ${C.border}`, borderRadius:22, padding:"26px", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", cursor:"pointer", minHeight:220, transition:"all 0.2s" }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor=C.borderDark; e.currentTarget.style.background=C.bgCard; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor=C.border; e.currentTarget.style.background="transparent"; }}
               >
