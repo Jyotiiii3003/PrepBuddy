@@ -6,7 +6,7 @@ import {
 } from "recharts";
 import { useAuth } from "../context/AuthContext";
 import { getProgressStats } from "../utils/api";
-
+import { getProgressStats, getRecentProblems } from "../utils/api";
 const F = {
   display: "'Clash Display', 'Sora', sans-serif",
   body: "'Sora', 'Segoe UI', sans-serif",
@@ -26,7 +26,12 @@ const RADAR_DATA = [
   { skill: "Recursion", score: 70 }, { skill: "Sorting", score: 85 },
   { skill: "Aptitude", score: 60 }, { skill: "Strings", score: 75 },
 ];
-
+const radarData = stats?.topics
+  ? Object.entries(stats.topics).map(([skill, data]) => ({
+      skill,
+      score: Math.round((data.solved / Math.max(data.total, 1)) * 100),
+    }))
+  : RADAR_DATA;
 const PROGRESS_DATA = [
   { day: "Mon", problems: 3 }, { day: "Tue", problems: 5 },
   { day: "Wed", problems: 2 }, { day: "Thu", problems: 7 },
@@ -80,29 +85,39 @@ export default function Dashboard() {
   const [greeting, setGreeting]         = useState("");
   const [moodSelected, setMoodSelected] = useState(null);
   const [sidebarOpen, setSidebarOpen]   = useState(true);
+  const [recentProblems, setRecentProblems] = useState([]);
+  const [weeklyData, setWeeklyData]         = useState(PROGRESS_DATA);
 
-  useEffect(() => {
-    const hour = new Date().getHours();
-    if (hour < 12) setGreeting("Good morning");
-    else if (hour < 17) setGreeting("Good afternoon");
-    else setGreeting("Good evening");
+ useEffect(() => {
+  const hour = new Date().getHours();
+  if (hour < 12) setGreeting("Good morning");
+  else if (hour < 17) setGreeting("Good afternoon");
+  else setGreeting("Good evening");
 
-    getProgressStats()
-      .then(data => {
-        setStats(data);
-        const target = Math.min(Math.round((data.solved / 50) * 100), 100);
-        let count = 0;
-        const interval = setInterval(() => {
-          count += 1;
-          setReadiness(count);
-          if (count >= target) clearInterval(interval);
-        }, 18);
-      })
-      .catch(() => {
-        // No progress yet — keep readiness at 0
-        setReadiness(0);
-      });
-  }, []);
+  // Fetch stats
+  getProgressStats()
+    .then(data => {
+      setStats(data);
+      const target = Math.min(Math.round((data.solved / 50) * 100), 100);
+      let count = 0;
+      const interval = setInterval(() => {
+        count += 1;
+        setReadiness(count);
+        if (count >= target) clearInterval(interval);
+      }, 18);
+    })
+    .catch(() => setReadiness(0));
+
+  // Fetch recent problems
+  getRecentProblems()
+    .then(data => setRecentProblems(data.recent || []))
+    .catch(() => setRecentProblems([]));
+
+  // Fetch weekly activity
+  getWeeklyActivity()
+    .then(data => setWeeklyData(data.activity || PROGRESS_DATA))
+    .catch(() => setWeeklyData(PROGRESS_DATA));
+}, []);
 
   const handleLogout = () => {
     authLogout();
@@ -202,7 +217,7 @@ export default function Dashboard() {
             <h3 style={{ fontFamily: F.body, fontSize: 18, fontWeight: 700, color: C.secondary, marginBottom: 4 }}>Skill Radar</h3>
             <p style={{ fontFamily: F.body, fontSize: 14, color: C.textMuted, marginBottom: 4 }}>Your strengths and blind spots</p>
             <ResponsiveContainer width="100%" height={270}>
-              <RadarChart data={RADAR_DATA}>
+              <RadarChart data={radarData.length > 0 ? radarData : RADAR_DATA}>
                 <PolarGrid stroke={C.border} />
                 <PolarAngleAxis dataKey="skill" tick={{ fontSize: 12, fill: C.textMuted, fontFamily: F.ui, fontWeight: 600 }} />
                 <Radar name="Score" dataKey="score" stroke={C.primary} fill={C.primary} fillOpacity={0.2} strokeWidth={2.5} />
@@ -277,21 +292,23 @@ export default function Dashboard() {
               </button>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              {RECENT_PROBLEMS.map((p, i) => (
-                <div key={i}
-                  style={{ display: "flex", alignItems: "center", gap: 13, padding: "12px 16px", borderRadius: 13, border: `1px solid ${C.border}`, cursor: "pointer", transition: "background 0.2s" }}
-                  onMouseEnter={e => e.currentTarget.style.background = C.bg}
-                  onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
-                  <span style={{ fontSize: 18 }}>{STATUS_ICONS[p.status]}</span>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontFamily: F.body, fontSize: 15, fontWeight: 600, color: C.secondary }}>{p.title}</div>
-                    <div style={{ fontFamily: F.ui, fontSize: 13, color: C.textMuted, fontWeight: 500, marginTop: 2 }}>{p.topic}</div>
-                  </div>
-                  <span style={{ fontFamily: F.ui, fontSize: 12, fontWeight: 700, padding: "3px 12px", borderRadius: 20, background: DIFF_COLORS[p.difficulty].bg, color: DIFF_COLORS[p.difficulty].text }}>
-                    {p.difficulty}
-                  </span>
-                </div>
-              ))}
+             {(recentProblems.length > 0 ? recentProblems : RECENT_PROBLEMS).map((p, i) => (
+  <div key={i}
+    style={{ display:"flex", alignItems:"center", gap:13, padding:"12px 16px", borderRadius:13, border:`1px solid ${C.border}`, cursor:"pointer", transition:"background 0.2s" }}
+    onMouseEnter={e => e.currentTarget.style.background=C.bg}
+    onMouseLeave={e => e.currentTarget.style.background="transparent"}>
+    <span style={{ fontSize:18 }}>{STATUS_ICONS[p.status]}</span>
+    <div style={{ flex:1 }}>
+      <div style={{ fontFamily:F.body, fontSize:15, fontWeight:600, color:C.secondary }}>
+        {p.problemTitle || p.title}
+      </div>
+      <div style={{ fontFamily:F.ui, fontSize:13, color:C.textMuted, fontWeight:500, marginTop:2 }}>{p.topic}</div>
+    </div>
+    <span style={{ fontFamily:F.ui, fontSize:12, fontWeight:700, padding:"3px 12px", borderRadius:20, background:DIFF_COLORS[p.difficulty]?.bg, color:DIFF_COLORS[p.difficulty]?.text }}>
+      {p.difficulty}
+    </span>
+  </div>
+))}
             </div>
           </div>
         </div>
