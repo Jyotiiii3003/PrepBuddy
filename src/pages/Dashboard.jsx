@@ -6,7 +6,8 @@ import {
 } from "recharts";
 import { useAuth } from "../context/AuthContext";
 import { getProgressStats } from "../utils/api";
-import { getProgressStats, getRecentProblems } from "../utils/api";
+import {getRecentProblems,getWeeklyActivity
+} from "../utils/api";
 const F = {
   display: "'Clash Display', 'Sora', sans-serif",
   body: "'Sora', 'Segoe UI', sans-serif",
@@ -26,12 +27,7 @@ const RADAR_DATA = [
   { skill: "Recursion", score: 70 }, { skill: "Sorting", score: 85 },
   { skill: "Aptitude", score: 60 }, { skill: "Strings", score: 75 },
 ];
-const radarData = stats?.topics
-  ? Object.entries(stats.topics).map(([skill, data]) => ({
-      skill,
-      score: Math.round((data.solved / Math.max(data.total, 1)) * 100),
-    }))
-  : RADAR_DATA;
+
 const PROGRESS_DATA = [
   { day: "Mon", problems: 3 }, { day: "Tue", problems: 5 },
   { day: "Wed", problems: 2 }, { day: "Thu", problems: 7 },
@@ -87,7 +83,12 @@ export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen]   = useState(true);
   const [recentProblems, setRecentProblems] = useState([]);
   const [weeklyData, setWeeklyData]         = useState(PROGRESS_DATA);
-
+  const radarData = stats?.topics
+  ? Object.entries(stats.topics).map(([skill, data]) => ({
+      skill,
+      score: Math.round((data.solved / Math.max(data.total, 1)) * 100),
+    }))
+  : RADAR_DATA;
  useEffect(() => {
   const hour = new Date().getHours();
   if (hour < 12) setGreeting("Good morning");

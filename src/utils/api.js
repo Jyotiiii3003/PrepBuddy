@@ -87,3 +87,6 @@ export async function updateProfile(updates) {
     body: JSON.stringify(updates),
   })
 }
+export async function getWeeklyActivity() {
+  return api('/progress/weekly');
+}
