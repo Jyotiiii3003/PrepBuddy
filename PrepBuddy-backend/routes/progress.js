@@ -52,6 +52,19 @@ router.get('/stats', async (req, res) => {
   }
 })
 
+// ── GET /api/progress/recent ─────────────────────────────
+// Get last 5 problems attempted
+router.get('/recent', async (req, res) => {
+  try {
+    const recent = await Progress.find({ userId: req.user._id })
+      .sort({ solvedAt: -1 })
+      .limit(5)
+      .select('problemTitle topic difficulty status solvedAt')
+    res.json({ recent })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
 // ── POST /api/progress ───────────────────────────────────
 router.post('/', async (req, res) => {
   try {

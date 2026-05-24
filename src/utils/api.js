@@ -7,7 +7,9 @@ export const clearToken  = ()      => localStorage.removeItem('prepbuddy_token')
 export const getStoredUser  = ()      => JSON.parse(localStorage.getItem('prepbuddy_user') || 'null')
 export const setStoredUser  = (user)  => localStorage.setItem('prepbuddy_user', JSON.stringify(user))
 export const clearStoredUser = ()     => localStorage.removeItem('prepbuddy_user')
-
+export async function getRecentProblems() {
+  return await api('/progress/recent')
+}
 // Base fetch wrapper
 async function api(endpoint, options = {}) {
   const token = getToken()
