@@ -65,6 +65,53 @@ router.get('/recent', async (req, res) => {
     res.status(500).json({ error: err.message })
   }
 })
+
+// ── GET /api/progress/weekly ─────────────────────────────
+router.get('/weekly', async (req, res) => {
+  try {
+    const all = await Progress.find({
+      userId: req.user._id,
+      status: 'solved'
+    })
+
+    const weekly = {
+      Mon: 0,
+      Tue: 0,
+      Wed: 0,
+      Thu: 0,
+      Fri: 0,
+      Sat: 0,
+      Sun: 0,
+    }
+
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+
+    all.forEach(p => {
+      const date = p.solvedAt || p.createdAt
+      if (!date) return
+
+      const dayName = days[new Date(date).getDay()]
+      if (weekly[dayName] !== undefined) {
+        weekly[dayName] += 1
+      }
+    })
+
+    const activity = [
+      { day: 'Mon', problems: weekly.Mon },
+      { day: 'Tue', problems: weekly.Tue },
+      { day: 'Wed', problems: weekly.Wed },
+      { day: 'Thu', problems: weekly.Thu },
+      { day: 'Fri', problems: weekly.Fri },
+      { day: 'Sat', problems: weekly.Sat },
+      { day: 'Sun', problems: weekly.Sun },
+    ]
+
+    res.json({ activity })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
+
 // ── POST /api/progress ───────────────────────────────────
 router.post('/', async (req, res) => {
   try {
