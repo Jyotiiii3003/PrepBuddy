@@ -14,7 +14,7 @@ app.use('/api/user',     require('./routes/user'))
 
 app.get('/', (req, res) => res.json({ message: 'PrepBuddy API is running!' }))
 app.use('/api/ai', require('./routes/ai'))
-
+app.use('/api/aptitude', require('./routes/aptitude'))
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ MongoDB connected successfully')

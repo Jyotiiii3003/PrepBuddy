@@ -90,3 +90,19 @@ export async function updateProfile(updates) {
 export async function getWeeklyActivity() {
   return api('/progress/weekly');
 }
+
+
+export async function saveAptitudeScore(topic, score, total) {
+  return await api('/aptitude/score', {
+    method: 'POST',
+    body: JSON.stringify({ topic, score, total }),
+  })
+}
+
+export async function getAptitudeStats() {
+  return await api('/aptitude/stats')
+}
+
+export async function getAptitudeScores() {
+  return await api('/aptitude/scores')
+}
