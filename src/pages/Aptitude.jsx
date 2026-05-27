@@ -1,17 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { saveAptitudeScore, getAptitudeStats } from "../utils/api";
 
 const F = {
   display: "'Clash Display', 'Sora', sans-serif",
-  body: "'Sora', 'Segoe UI', sans-serif",
-  ui: "'Nunito', 'Sora', sans-serif",
-  mono: "'JetBrains Mono', monospace",
+  body:    "'Sora', 'Segoe UI', sans-serif",
+  ui:      "'Nunito', 'Sora', sans-serif",
+  mono:    "'JetBrains Mono', monospace",
 };
 
 const C = {
-  primary: "#16A34A", secondary: "#14532D", accent: "#4ADE80",
-  bg: "#F0FDF4", bgCard: "#DCFCE7", text: "#052E16",
-  textMuted: "#166534", border: "#BBF7D0", borderDark: "#86EFAC", white: "#FFFFFF",
+  primary:   "#16A34A", secondary: "#14532D", accent: "#4ADE80",
+  bg:        "#F0FDF4", bgCard:    "#DCFCE7", text:   "#052E16",
+  textMuted: "#166534", border:   "#BBF7D0", borderDark: "#86EFAC", white: "#FFFFFF",
 };
 
 const QUESTIONS = [
@@ -43,23 +44,37 @@ const NAV = [
 
 export default function Aptitude() {
   const navigate = useNavigate();
-  const [mode, setMode]                   = useState("browse");
-  const [selectedTopic, setSelectedTopic] = useState("All");
-  const [selectedDiff, setSelectedDiff]   = useState("All");
-  const [quizQuestions, setQuizQuestions] = useState([]);
-  const [current, setCurrent]             = useState(0);
-  const [selected, setSelected]           = useState("");
-  const [showAnswer, setShowAnswer]       = useState(false);
-  const [answers, setAnswers]             = useState([]);
+  const [mode,            setMode]            = useState("browse");
+  const [selectedTopic,   setSelectedTopic]   = useState("All");
+  const [selectedDiff,    setSelectedDiff]    = useState("All");
+  const [quizQuestions,   setQuizQuestions]   = useState([]);
+  const [quizTopic,       setQuizTopic]       = useState("Mixed");
+  const [current,         setCurrent]         = useState(0);
+  const [selected,        setSelected]        = useState("");
+  const [showAnswer,      setShowAnswer]       = useState(false);
+  const [answers,         setAnswers]         = useState([]);
+  const [saving,          setSaving]          = useState(false);
+  const [saved,           setSaved]           = useState(false);
+  const [aptitudeStats,   setAptitudeStats]   = useState(null);
+  const [statsLoading,    setStatsLoading]    = useState(true);
+
+  useEffect(() => {
+    getAptitudeStats()
+      .then(data => setAptitudeStats(data))
+      .catch(() => setAptitudeStats(null))
+      .finally(() => setStatsLoading(false));
+  }, []);
 
   const filtered = QUESTIONS.filter(q =>
     (selectedTopic === "All" || q.topic === selectedTopic) &&
     (selectedDiff  === "All" || q.difficulty === selectedDiff)
   );
 
-  const startQuiz = (questions) => {
+  const startQuiz = (questions, topic = "Mixed") => {
     setQuizQuestions(questions);
-    setCurrent(0); setSelected(""); setShowAnswer(false); setAnswers([]);
+    setQuizTopic(topic);
+    setCurrent(0); setSelected(""); setShowAnswer(false);
+    setAnswers([]); setSaved(false);
     setMode("quiz");
   };
 
@@ -75,6 +90,22 @@ export default function Aptitude() {
   const handleNext = () => {
     if (current + 1 >= quizQuestions.length) setMode("result");
     else { setCurrent(c => c+1); setSelected(""); setShowAnswer(false); }
+  };
+
+  // Save score to MongoDB when quiz ends
+  const handleSaveScore = async (finalAnswers) => {
+    setSaving(true);
+    try {
+      const correctCount = finalAnswers.filter(a => a.correct).length;
+      await saveAptitudeScore(quizTopic, correctCount, finalAnswers.length);
+      setSaved(true);
+      // Refresh stats
+      const data = await getAptitudeStats();
+      setAptitudeStats(data);
+    } catch (err) {
+      console.error("Failed to save score:", err);
+    }
+    setSaving(false);
   };
 
   const score = answers.filter(a => a.correct).length;
@@ -116,19 +147,19 @@ export default function Aptitude() {
                 </h1>
                 <p style={{ fontFamily:F.body, fontSize:16, color:C.textMuted }}>Master Quant, Logical and Verbal for placements</p>
               </div>
-              <button onClick={() => startQuiz(filtered.slice(0,5))}
+              <button onClick={() => startQuiz(filtered.slice(0,5), "Mixed")}
                 style={{ fontFamily:F.ui, background:C.primary, border:"none", color:"#fff", padding:"12px 26px", borderRadius:12, fontSize:15, fontWeight:800, cursor:"pointer", boxShadow:`0 4px 14px ${C.primary}44` }}>
                 ▶ Start Mock Test
               </button>
             </div>
 
-            {/* Stats */}
+            {/* Stats from MongoDB */}
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(160px, 1fr))", gap:14, marginBottom:26 }}>
               {[
-                { label:"Total Questions", value:QUESTIONS.length,                              icon:"📝", color:C.primary  },
-                { label:"Quant",           value:QUESTIONS.filter(q=>q.topic==="Quant").length,   icon:"🧮", color:"#2563EB" },
-                { label:"Logical",         value:QUESTIONS.filter(q=>q.topic==="Logical").length, icon:"🧩", color:"#7C3AED" },
-                { label:"Verbal",          value:QUESTIONS.filter(q=>q.topic==="Verbal").length,  icon:"📖", color:"#EA580C" },
+                { label:"Total Questions", value:QUESTIONS.length,                                icon:"📝", color:C.primary  },
+                { label:"Quant",           value:QUESTIONS.filter(q=>q.topic==="Quant").length,  icon:"🧮", color:"#2563EB" },
+                { label:"Logical",         value:QUESTIONS.filter(q=>q.topic==="Logical").length,icon:"🧩", color:"#7C3AED" },
+                { label:"Verbal",          value:QUESTIONS.filter(q=>q.topic==="Verbal").length, icon:"📖", color:"#EA580C" },
               ].map(s => (
                 <div key={s.label} style={{ background:C.white, border:`1px solid ${C.border}`, borderRadius:16, padding:"18px 22px" }}>
                   <div style={{ display:"flex", justifyContent:"space-between", marginBottom:10 }}>
@@ -140,18 +171,47 @@ export default function Aptitude() {
               ))}
             </div>
 
+            {/* Your performance from MongoDB */}
+            {aptitudeStats && aptitudeStats.totalAttempts > 0 && (
+              <div style={{ background:C.white, border:`1px solid ${C.border}`, borderRadius:20, padding:"22px 26px", marginBottom:26 }}>
+                <h3 style={{ fontFamily:F.body, fontSize:18, fontWeight:700, color:C.secondary, marginBottom:16 }}>📊 Your Performance</h3>
+                <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(180px, 1fr))", gap:14 }}>
+                  <div style={{ background:C.bgCard, borderRadius:14, padding:"16px 20px" }}>
+                    <div style={{ fontFamily:F.ui, fontSize:13, color:C.textMuted, fontWeight:600, marginBottom:8 }}>Overall Average</div>
+                    <div style={{ fontFamily:F.mono, fontSize:28, fontWeight:600, color:C.primary }}>{aptitudeStats.overallAvg}%</div>
+                  </div>
+                  <div style={{ background:C.bgCard, borderRadius:14, padding:"16px 20px" }}>
+                    <div style={{ fontFamily:F.ui, fontSize:13, color:C.textMuted, fontWeight:600, marginBottom:8 }}>Total Attempts</div>
+                    <div style={{ fontFamily:F.mono, fontSize:28, fontWeight:600, color:"#2563EB" }}>{aptitudeStats.totalAttempts}</div>
+                  </div>
+                  {aptitudeStats.stats?.map(s => (
+                    <div key={s.topic} style={{ background:C.bgCard, borderRadius:14, padding:"16px 20px" }}>
+                      <div style={{ fontFamily:F.ui, fontSize:13, color:C.textMuted, fontWeight:600, marginBottom:8 }}>{s.topic} Best</div>
+                      <div style={{ fontFamily:F.mono, fontSize:28, fontWeight:600, color:"#7C3AED" }}>{s.best}%</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Topic Cards */}
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(200px, 1fr))", gap:16, marginBottom:28 }}>
               {["Quant","Logical","Verbal","Data Interpretation"].map(topic => (
-                <div key={topic} onClick={() => startQuiz(QUESTIONS.filter(q=>q.topic===topic))}
+                <div key={topic} onClick={() => startQuiz(QUESTIONS.filter(q=>q.topic===topic), topic)}
                   onMouseEnter={e => { e.currentTarget.style.borderColor=C.borderDark; e.currentTarget.style.transform="translateY(-4px)"; e.currentTarget.style.boxShadow=`0 12px 28px ${C.primary}18`; }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor=C.border; e.currentTarget.style.transform="translateY(0)"; e.currentTarget.style.boxShadow="none"; }}
                   style={{ background:C.white, border:`1px solid ${C.border}`, borderRadius:18, padding:"22px", cursor:"pointer", transition:"all 0.2s" }}>
-                  <div style={{ fontSize:30, marginBottom:12 }}>{TOPIC_ICONS[topic]}</div>
+                  <div style={{ fontSize:30, marginBottom:12 }}>{TOPIC_ICONS[topic] || "📚"}</div>
                   <div style={{ fontFamily:F.body, fontSize:17, fontWeight:700, color:C.secondary, marginBottom:5 }}>{topic}</div>
                   <div style={{ fontFamily:F.ui, fontSize:14, color:C.textMuted, fontWeight:500, marginBottom:16 }}>
                     {QUESTIONS.filter(q=>q.topic===topic).length} questions
                   </div>
+                  {/* Show best score if available */}
+                  {aptitudeStats?.stats?.find(s=>s.topic===topic) && (
+                    <div style={{ fontFamily:F.mono, fontSize:13, color:C.primary, fontWeight:600, marginBottom:8 }}>
+                      Best: {aptitudeStats.stats.find(s=>s.topic===topic).best}%
+                    </div>
+                  )}
                   <div style={{ fontFamily:F.ui, fontSize:14, color:C.primary, fontWeight:700 }}>Practice now →</div>
                 </div>
               ))}
@@ -178,7 +238,7 @@ export default function Aptitude() {
               </div>
 
               {filtered.map((q, i) => (
-                <div key={q.id} onClick={() => startQuiz([q])}
+                <div key={q.id} onClick={() => startQuiz([q], q.topic)}
                   style={{ display:"flex", alignItems:"center", gap:16, padding:"16px 22px", borderBottom:i<filtered.length-1?`1px solid ${C.border}`:"none", cursor:"pointer", transition:"background 0.15s" }}
                   onMouseEnter={e => e.currentTarget.style.background=C.bg}
                   onMouseLeave={e => e.currentTarget.style.background="transparent"}
@@ -273,11 +333,25 @@ export default function Aptitude() {
             <h2 style={{ fontFamily:F.display, fontSize:"clamp(1.8rem, 3vw, 2.6rem)", fontWeight:700, color:C.secondary, marginBottom:10, letterSpacing:"-0.025em" }}>
               {score===quizQuestions.length?"Perfect Score!":score>=quizQuestions.length/2?"Good Job!":"Keep Practicing!"}
             </h2>
-            <p style={{ fontFamily:F.body, fontSize:18, color:C.textMuted, marginBottom:36 }}>
+            <p style={{ fontFamily:F.body, fontSize:18, color:C.textMuted, marginBottom:16 }}>
               You scored{" "}
               <strong style={{ fontFamily:F.mono, color:C.primary, fontSize:22 }}>{score}/{quizQuestions.length}</strong>
+              {" "}({Math.round((score/quizQuestions.length)*100)}%)
             </p>
 
+            {/* Save score button */}
+            {!saved ? (
+              <button onClick={() => handleSaveScore(answers)} disabled={saving}
+                style={{ fontFamily:F.ui, background:saving?C.borderDark:C.secondary, border:"none", color:"#fff", padding:"11px 28px", borderRadius:12, fontSize:15, fontWeight:700, cursor:saving?"not-allowed":"pointer", marginBottom:24, display:"block", margin:"0 auto 24px" }}>
+                {saving ? "Saving..." : "💾 Save Score to Profile"}
+              </button>
+            ) : (
+              <div style={{ fontFamily:F.ui, fontSize:15, color:C.primary, fontWeight:700, marginBottom:24, background:C.bgCard, padding:"10px 20px", borderRadius:12, display:"inline-block" }}>
+                ✅ Score saved to your profile!
+              </div>
+            )}
+
+            {/* Review */}
             <div style={{ background:C.white, border:`1px solid ${C.border}`, borderRadius:22, padding:"24px", marginBottom:26, textAlign:"left" }}>
               <h3 style={{ fontFamily:F.body, fontSize:18, fontWeight:700, color:C.secondary, marginBottom:18 }}>Review</h3>
               {answers.map((a, i) => (
@@ -296,7 +370,7 @@ export default function Aptitude() {
             </div>
 
             <div style={{ display:"flex", gap:12 }}>
-              <button onClick={() => startQuiz(quizQuestions)}
+              <button onClick={() => startQuiz(quizQuestions, quizTopic)}
                 style={{ flex:1, padding:"14px", borderRadius:13, background:C.primary, border:"none", color:"#fff", fontFamily:F.ui, fontSize:16, fontWeight:800, cursor:"pointer", boxShadow:`0 4px 14px ${C.primary}44` }}>
                 Retry Quiz
               </button>
