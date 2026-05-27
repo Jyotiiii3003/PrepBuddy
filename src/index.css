@@ -1,53 +1,73 @@
 @import "tailwindcss";
 
-/* ============================================
-   PREPBUDDY — GLOBAL DESIGN SYSTEM
-   ============================================ */
-
 :root {
   --font-display: 'Clash Display', 'Sora', sans-serif;
-  --font-body: 'Sora', 'Segoe UI', sans-serif;
-  --font-ui: 'Nunito', 'Sora', sans-serif;
-  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
-
-  --color-primary: #16A34A;
-  --color-secondary: #14532D;
-  --color-accent: #4ADE80;
-  --color-bg: #F0FDF4;
-  --color-bg-card: #DCFCE7;
-  --color-text: #052E16;
-  --color-text-muted: #166534;
-  --color-border: #BBF7D0;
-  --color-border-dark: #86EFAC;
+  --font-body:    'Sora', 'Segoe UI', sans-serif;
+  --font-ui:      'Nunito', 'Sora', sans-serif;
+  --font-mono:    'JetBrains Mono', 'Courier New', monospace;
 }
 
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html {
-  font-size: 16px;
-  scroll-behavior: smooth;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
 
 body {
   font-family: var(--font-body);
-  font-size: 1rem;
-  color: var(--color-text);
-  background: var(--color-bg);
+  background: #F0FDF4;
+  color: #052E16;
   line-height: 1.6;
 }
 
-input, textarea, select, button {
-  font-family: var(--font-ui);
-}
+input, textarea, select, button { font-family: var(--font-ui); }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #86EFAC; border-radius: 100px; }
 ::-webkit-scrollbar-thumb:hover { background: #16A34A; }
 ::selection { background: #BBF7D0; color: #052E16; }
+
+/* ── Mobile fixes ── */
+@media (max-width: 768px) {
+  .desktop-only { display: none !important; }
+
+  /* Fix grid layouts on mobile */
+  .grid-2col { grid-template-columns: 1fr !important; }
+  .grid-3col { grid-template-columns: 1fr !important; }
+
+  /* Fix padding on mobile */
+  .main-content { padding: 16px !important; }
+
+  /* Fix font sizes on mobile */
+  h1 { font-size: 1.6rem !important; }
+  h2 { font-size: 1.3rem !important; }
+}
+
+/* Show bottom nav only on mobile */
+@media (max-width: 768px) {
+  .mobile-bottom-nav {
+    display: flex !important;
+  }
+
+  /* Hide sidebar on mobile */
+  aside {
+    display: none !important;
+  }
+
+  /* Add bottom padding so content isn't hidden behind bottom nav */
+  main {
+    padding-bottom: 80px !important;
+  }
+
+  /* Fix card grids on mobile */
+  div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  div[style*="grid-template-columns: 1fr 1.4fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  div[style*="grid-template-columns: repeat(auto-fit"] {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
