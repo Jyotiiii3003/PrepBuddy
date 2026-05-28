@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signup } from "../utils/api";
 import { useAuth } from "../context/AuthContext";
+import { useIsMobile } from "../hooks/useWindowSize";
 
 const F = {
   display: "'Clash Display', 'Sora', sans-serif",
@@ -37,7 +38,7 @@ export default function Signup() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [showPass, setShowPass] = useState(false);
-
+  const isMobile = useIsMobile();
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     setError("");
@@ -105,6 +106,7 @@ export default function Signup() {
     <div style={{ minHeight: "100vh", background: C.bg, display: "flex", fontFamily: F.body }}>
 
       {/* LEFT PANEL */}
+      {!isMobile && (
       <div style={{ flex: 1, background: C.secondary, display: "flex", flexDirection: "column", justifyContent: "center", padding: "60px 56px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: -80, right: -80, width: 300, height: 300, borderRadius: "50%", background: "rgba(74,222,128,0.08)" }} />
         <div style={{ position: "absolute", bottom: -60, left: -60, width: 240, height: 240, borderRadius: "50%", background: "rgba(74,222,128,0.06)" }} />
@@ -134,7 +136,7 @@ export default function Signup() {
             <span style={{ fontFamily: F.ui, fontSize: 16, color: "#bbf7d0", fontWeight: 600 }}>{item.text}</span>
           </div>
         ))}
-      </div>
+      </div> )}
 
       {/* RIGHT PANEL */}
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 2rem" }}>

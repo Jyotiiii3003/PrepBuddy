@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../utils/api";
 import { useAuth } from "../context/AuthContext";
 import { F } from "../utils/theme";
+import { useIsMobile } from "../hooks/useWindowSize";
 const COLORS = {
   primary: "#16A34A",
   secondary: "#14532D",
@@ -23,7 +24,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPass, setShowPass] = useState(false);
-
+  const isMobile = useIsMobile();
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     setError("");
@@ -51,6 +52,7 @@ export default function Login() {
     <div style={{ minHeight: "100vh", background: COLORS.bg, display: "flex", fontFamily: F.body }}>
 
       {/* LEFT PANEL */}
+      {!isMobile && (
       <div style={{ flex: 1, background: COLORS.secondary, display: "flex", flexDirection: "column", justifyContent: "center", padding: "60px 56px", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: -80, right: -80, width: 280, height: 280, borderRadius: "50%", background: "rgba(74,222,128,0.08)" }} />
         <div style={{ position: "absolute", bottom: -60, left: -60, width: 220, height: 220, borderRadius: "50%", background: "rgba(74,222,128,0.06)" }} />
@@ -85,7 +87,7 @@ export default function Login() {
             <span style={{ fontSize: 16, color: "#bbf7d0" }}>{item.text}</span>
           </div>
         ))}
-      </div>
+      </div> )}
 
       {/* RIGHT PANEL */}
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 2rem" }}>
