@@ -67,7 +67,7 @@ PrepBuddy/
 Make sure you have installed:
 
 - Node.js
-- npm or yarn
+- npm or YARN
 
 ---
 
