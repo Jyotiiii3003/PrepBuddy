@@ -24,12 +24,12 @@ app.use('/api/ai', require('./routes/ai'))
 app.use('/api/aptitude', require('./routes/aptitude'))
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
-    console.log('✅ MongoDB connected successfully')
+    console.log(' MongoDB connected successfully')
     app.listen(process.env.PORT || 5000, () => {
-      console.log(`🚀 Server running on port ${process.env.PORT || 5000}`)
+      console.log(` Server running on port ${process.env.PORT || 5000}`)
     })
   })
   .catch(err => {
-    console.error('❌ MongoDB connection error:', err.message)
+    console.error('MongoDB connection error:', err.message)
     process.exit(1)
   })
